@@ -1,6 +1,8 @@
 # Mediator.Sagas
 A library to bring Saga pattern to Mediator Library
 
+[![Release to Nuget](https://github.com/tbd-develop/Mediator.Sagas/actions/workflows/release.yml/badge.svg?event=release)](https://github.com/tbd-develop/Mediator.Sagas/actions/workflows/release.yml)
+
 ### Why?
 
 The Mediator pattern is a great way to decouple your application. The Mediator library is a
