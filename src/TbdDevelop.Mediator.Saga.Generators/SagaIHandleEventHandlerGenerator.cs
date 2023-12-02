@@ -29,7 +29,7 @@ public class SagaIHandleEventHandlerGenerator : ISourceGenerator
             
             var namespaceDeclaration = sagaClassDeclaration
                 .Ancestors()
-                .OfType<NamespaceDeclarationSyntax>()
+                .OfType<FileScopedNamespaceDeclarationSyntax>()
                 .First();
             
             var template = Template.Parse(

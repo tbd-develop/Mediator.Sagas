@@ -9,11 +9,14 @@ public abstract class Saga<TState> : ISaga<TState>
     {
         OrchestrationIdentifier = orchestrationIdentifier;
     }
-    
+
     public abstract bool IsComplete { get; }
     public Guid OrchestrationIdentifier { get; }
-    object ISaga.State { get; } = null!;
-    public TState State { get; private set; }
+    object ISaga.State => State;
 
-    public void ApplyState(TState state) => State = state;
+    private TState? _state;
+    public TState State => _state ??= new TState();
+
+    void ISaga.ApplyState(object state) => ApplyState((TState)state);
+    public void ApplyState(TState state) => _state = state;
 }

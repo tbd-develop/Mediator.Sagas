@@ -11,7 +11,7 @@ namespace TbdDevelop.Mediator.Sagas.SqlServer;
 public class SqlServerSagaPersistence : ISagaPersistence
 {
     private readonly IDbContextFactory<SagaDbContext> _contextFactory;
-    
+
     public SqlServerSagaPersistence(
         IDbContextFactory<SagaDbContext> contextFactory
     )
@@ -19,9 +19,9 @@ public class SqlServerSagaPersistence : ISagaPersistence
         _contextFactory = contextFactory;
     }
 
-    public async Task<TSaga?> FetchSagaIfExistsByOrchestrationId<TSaga, TState>(Guid identifier, CancellationToken cancellationToken = default)
-        where TSaga : Saga<TState>
-        where TState : class, new()
+    public async Task<TSaga?> FetchSagaIfExistsByOrchestrationId<TSaga>(Guid identifier,
+        CancellationToken cancellationToken = default)
+        where TSaga : class, ISaga
     {
         await using var context = await _contextFactory.CreateDbContextAsync(cancellationToken);
 
@@ -29,12 +29,13 @@ public class SqlServerSagaPersistence : ISagaPersistence
 
         if (sagaFromDb is null)
         {
-            return null;
+            return default;
         }
-        
-        var saga = Activator.CreateInstance(typeof(TSaga), identifier) as TSaga ?? throw new InvalidOperationException();
 
-        saga.ApplyState(JsonSerializer.Deserialize<TState>(sagaFromDb.State) ?? new TState());
+        var saga = Activator.CreateInstance(typeof(TSaga), identifier) as TSaga ??
+                   throw new InvalidOperationException();
+
+        saga.ApplyState(JsonSerializer.Deserialize(sagaFromDb.State, saga.State.GetType()) ?? saga.State);
 
         return saga;
     }

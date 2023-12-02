@@ -3,6 +3,9 @@
 /// </auto-generated>
 
 using System;
+using System.Threading.Tasks;
+using Mediator;
+using TbdDevelop.Mediator.Sagas.Contracts;
 
 namespace {{namespace}};
 
@@ -12,18 +15,16 @@ namespace {{namespace}};
 
 public class {{classname}}(ISagaPersistence _persistence) : INotificationHandler<{{notification}}>
 {
-    private readonly ISagaPersistence _persistence;
-
     public async ValueTask Handle({{notification}} notification, CancellationToken cancellationToken)
     {
         if( notification is not IOrchestratedNotification orchestrated) {
-            return ValueTask.CompletedTask;
+            return;
         }
 
-        var saga = await _persistence.FetchSagaIfExistsByOrchestrationId<{{saga}}>(orchestrated.OrchestrationIdentifier(notification));
+        var saga = await _persistence.FetchSagaIfExistsByOrchestrationId<{{saga}}>(orchestrated.OrchestrationIdentifier, cancellationToken);
 
         if( saga is null) {
-            return ValueTask.CompletedTask;
+            return;
         }
 
         saga.Handle(notification);

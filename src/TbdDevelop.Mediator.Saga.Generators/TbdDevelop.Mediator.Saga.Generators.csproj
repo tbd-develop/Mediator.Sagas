@@ -37,4 +37,8 @@
         <EmbeddedResource Include="resources\**"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
+    </ItemGroup>
+
 </Project>

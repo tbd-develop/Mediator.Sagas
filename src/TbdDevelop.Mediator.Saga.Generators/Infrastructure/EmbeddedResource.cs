@@ -19,7 +19,7 @@ public static class EmbeddedResource
                 where name.EndsWith(resourceName, StringComparison.InvariantCulture)
                 select name).FirstOrDefault();
 
-        if (!string.IsNullOrEmpty(manifestResourceName))
+        if (string.IsNullOrEmpty(manifestResourceName))
         {
             throw new InvalidOperationException($"Unable to load resource {resourceName} in {baseName}.");
         }
