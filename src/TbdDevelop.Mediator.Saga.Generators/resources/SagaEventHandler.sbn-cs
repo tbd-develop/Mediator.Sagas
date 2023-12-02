@@ -6,6 +6,9 @@ using System;
 using System.Threading.Tasks;
 using Mediator;
 using TbdDevelop.Mediator.Sagas.Contracts;
+{{ for using in usings }}
+using {{using}};
+{{ end }} 
 
 namespace {{namespace}};
 
