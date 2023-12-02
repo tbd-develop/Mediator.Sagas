@@ -16,7 +16,7 @@ namespace {{namespace}};
 /// Handler for {{notification}} to {{saga}}
 /// </summary>
 
-public class {{classname}}(ISagaPersistence _persistence) : INotificationHandler<{{notification}}>
+public partial class {{classname}}(ISagaPersistence _persistence) : INotificationHandler<{{notification}}>
 {
     public async ValueTask Handle({{notification}} notification, CancellationToken cancellationToken)
     {
