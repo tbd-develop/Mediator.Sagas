@@ -7,7 +7,8 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Title>Mediator Sagas SqlServer</Title>
         <Description>Persistence Implementation for storing / retrieving the sagas for Mediator.Sagas</Description>
-        <PackageProjectUrl>https://github.com/tbd-devlop/Mediator.Sagas</PackageProjectUrl>
+        <PackageProjectUrl>https://github.com/tbd-develop/Mediator.Sagas</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/tbd-develop/Mediator.Sagas</RepositoryUrl>
     </PropertyGroup>
 
     <ItemGroup>

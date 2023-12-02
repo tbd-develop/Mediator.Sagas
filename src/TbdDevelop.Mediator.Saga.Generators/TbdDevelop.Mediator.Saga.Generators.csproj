@@ -15,7 +15,7 @@
         <DevelopmentDependency>true</DevelopmentDependency>
 
         <RootNamespace>TbdDevelop.Mediator.Saga.Generators</RootNamespace>
-        <PackageId>TbdDeveloper.Mediator.Saga.Generators</PackageId>
+        <PackageId>TbdDevelop.Mediator.Saga.Generators</PackageId>
         <Title>Mediator Saga Generators</Title>
         <Authors>Terry Burns-Dyson</Authors>
         <Description>This supplements the Mediator.Saga library by auto generating the handlers necessary when you introduce a Saga. </Description>
