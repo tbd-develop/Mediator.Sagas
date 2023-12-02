@@ -5,7 +5,13 @@ namespace TbdDevelop.Mediator.Saga.Generators.Receivers;
 
 public class FindSagasWithHandlerSyntaxReceiver : ISyntaxReceiver
 {
+    private readonly string _sagaHandlerInterfaceName;
     public Dictionary<ClassDeclarationSyntax, List<IdentifierNameSyntax>> Candidates { get; } = new();
+
+    public FindSagasWithHandlerSyntaxReceiver(string sagaHandlerInterfaceName)
+    {
+        _sagaHandlerInterfaceName = sagaHandlerInterfaceName;
+    }
 
     public void OnVisitSyntaxNode(SyntaxNode syntaxNode)
     {
@@ -21,7 +27,7 @@ public class FindSagasWithHandlerSyntaxReceiver : ISyntaxReceiver
         {
             if (baseType.Type is not GenericNameSyntax genericName) continue;
             if (genericName.Identifier.ValueText == "Saga") continue;
-            if (genericName.Identifier.ValueText != "IHandle") continue;
+            if (genericName.Identifier.ValueText != _sagaHandlerInterfaceName) continue;
             if (genericName.TypeArgumentList.Arguments.Count != 1) continue;
             if (genericName.TypeArgumentList.Arguments[0] is not IdentifierNameSyntax identifierName) continue;
 

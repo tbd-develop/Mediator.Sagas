@@ -5,10 +5,10 @@ using TbdDevelop.Mediator.Saga.Generators.Receivers;
 namespace TbdDevelop.Mediator.Saga.Generators;
 
 [Generator]
-public class SagaIHandleEventHandlerGenerator : SagaHandlerEventGenerator, ISourceGenerator
+public class SagaStartedByEventHandlerGenerator : SagaHandlerEventGenerator, ISourceGenerator
 {
-    public override string TemplateName => "resources/SagaEventHandler.sbn-cs";
-    public override string HandlerInterfaceName => "IHandle";
+    public override string TemplateName => "resources/SagaStartedByHandler.sbn-cs";
+    public override string HandlerInterfaceName => "IAmStartedBy";
 
     public void Initialize(GeneratorInitializationContext context)
     {

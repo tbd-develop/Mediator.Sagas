@@ -2,4 +2,5 @@
 
 public class SampleSagaState
 {
+    public object[] Data { get; set; } = null!;
 }
