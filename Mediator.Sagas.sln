@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TbdDevelop.Mediator.Saga.Generators", "src\TbdDevelop.Mediator.Saga.Generators\TbdDevelop.Mediator.Saga.Generators.csproj", "{B9D57F6B-8E32-4FC1-B5CC-314BD7AEBA2B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TbdDevelop.Mediator.Sagas", "src\TbdDevelop.Mediator.Sagas\TbdDevelop.Mediator.Sagas.csproj", "{1417DC91-DE65-4279-BCE7-6FC6952123B3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TbdDevelop.Mediator.Sagas.SqlServer", "src\TbdDevelop.Mediator.Sagas.SqlServer\TbdDevelop.Mediator.Sagas.SqlServer.csproj", "{F32EED7A-0314-4CED-8E6F-1715790C401A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B9D57F6B-8E32-4FC1-B5CC-314BD7AEBA2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9D57F6B-8E32-4FC1-B5CC-314BD7AEBA2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9D57F6B-8E32-4FC1-B5CC-314BD7AEBA2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9D57F6B-8E32-4FC1-B5CC-314BD7AEBA2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1417DC91-DE65-4279-BCE7-6FC6952123B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1417DC91-DE65-4279-BCE7-6FC6952123B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1417DC91-DE65-4279-BCE7-6FC6952123B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1417DC91-DE65-4279-BCE7-6FC6952123B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F32EED7A-0314-4CED-8E6F-1715790C401A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F32EED7A-0314-4CED-8E6F-1715790C401A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F32EED7A-0314-4CED-8E6F-1715790C401A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F32EED7A-0314-4CED-8E6F-1715790C401A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
