@@ -6,6 +6,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TbdDevelop.Mediator.Sagas",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TbdDevelop.Mediator.Sagas.SqlServer", "src\TbdDevelop.Mediator.Sagas.SqlServer\TbdDevelop.Mediator.Sagas.SqlServer.csproj", "{F32EED7A-0314-4CED-8E6F-1715790C401A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{1E7C0BE5-45AB-4872-8E55-2E1C974BDC4F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TbdDevelop.Mediator.Saga.Generators.Tests", "tests\TbdDevelop.Mediator.Saga.Generators.Tests\TbdDevelop.Mediator.Saga.Generators.Tests.csproj", "{FBD7C32C-46AB-4049-9023-FF5FC92DB3A4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +28,12 @@ Global
 		{F32EED7A-0314-4CED-8E6F-1715790C401A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F32EED7A-0314-4CED-8E6F-1715790C401A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F32EED7A-0314-4CED-8E6F-1715790C401A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBD7C32C-46AB-4049-9023-FF5FC92DB3A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBD7C32C-46AB-4049-9023-FF5FC92DB3A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBD7C32C-46AB-4049-9023-FF5FC92DB3A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBD7C32C-46AB-4049-9023-FF5FC92DB3A4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{FBD7C32C-46AB-4049-9023-FF5FC92DB3A4} = {1E7C0BE5-45AB-4872-8E55-2E1C974BDC4F}
 	EndGlobalSection
 EndGlobal

@@ -2,7 +2,7 @@
 
 public interface ISagaPersistence
 {
-    TSaga Retrieve<TSaga, TState>(Guid identifier)
+    Task<TSaga?> FetchSagaIfExistsByOrchestrationId<TSaga, TState>(Guid identifier, CancellationToken cancellationToken = default)
         where TSaga : Saga<TState>
         where TState : class, new();
 

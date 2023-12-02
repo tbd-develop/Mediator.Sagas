@@ -2,13 +2,18 @@
 
 namespace TbdDevelop.Mediator.Sagas;
 
-public abstract class Saga<TState>(Guid orchestrationIdentifier) : ISaga<TState>
+public abstract class Saga<TState> : ISaga<TState>
     where TState : class, new()
 {
+    protected Saga(Guid orchestrationIdentifier)
+    {
+        OrchestrationIdentifier = orchestrationIdentifier;
+    }
+    
     public abstract bool IsComplete { get; }
-    public Guid OrchestrationIdentifier { get; } = orchestrationIdentifier;
+    public Guid OrchestrationIdentifier { get; }
     object ISaga.State { get; } = null!;
-    public TState State { get; private set; } = new();
+    public TState State { get; private set; }
 
     public void ApplyState(TState state) => State = state;
 }

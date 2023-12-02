@@ -9,6 +9,11 @@
         <IsRoslynComponent>true</IsRoslynComponent>
         <PackageScribanIncludeSource>true</PackageScribanIncludeSource>
 
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <IncludeBuildOutput>false</IncludeBuildOutput>
+        <NoPackageAnalysis>true</NoPackageAnalysis>
+        <DevelopmentDependency>true</DevelopmentDependency>
+
         <RootNamespace>TbdDevelop.Mediator.Saga.Generators</RootNamespace>
         <PackageId>TbdDeveloper.Mediator.Saga.Generators</PackageId>
     </PropertyGroup>

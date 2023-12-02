@@ -1,7 +1,7 @@
 ﻿namespace TbdDevelop.Mediator.Sagas.Contracts;
 
-public interface IHandle<in TEvent>
-    where TEvent : class
+public interface IHandle<in TNotification>
+    where TNotification : class, IOrchestratedNotification
 {
-    void Handle(TEvent @event);
+    void Handle(TNotification @event);
 }

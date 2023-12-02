@@ -24,44 +24,32 @@ public class SagaIHandleEventHandlerGenerator : ISourceGenerator
         foreach (var row in receiver.Candidates)
         {
             var sagaClassDeclaration = row.Key;
+            var sagaName = sagaClassDeclaration.Identifier.ValueText;
             var handlers = row.Value;
+            
+            var namespaceDeclaration = sagaClassDeclaration
+                .Ancestors()
+                .OfType<NamespaceDeclarationSyntax>()
+                .First();
+            
+            var template = Template.Parse(
+                EmbeddedResource.GetResourceContents("resources/SagaEventHandler.sbn-cs"),
+                "resources/SagaEventHandler.sbn-cs");
 
-            foreach (var handler in handlers)
+            foreach (var handlerIdentifierNameSyntax in handlers)
             {
-                // get namespace of saga.Handlers
-
-                // get handlername
-
-                // build TenantCreatedSagaTenantCreatedEventHandler : INotificationHandler<TenantCreatedEvent>
-
-                // Load Saga (class)
-
-                // if does not exist, move on! 
-
-                // update saga with event 
-
-                // save saga
-
-                // var namespaceDeclaration = classDeclaration
-                //     .Ancestors()
-                //     .OfType<NamespaceDeclarationSyntax>()
-                //     .First();
-                //
-                // var className = $"{classDeclaration.Identifier.ValueText}EventHandler";
-                //
-                // var template = Template.Parse(
-                //     EmbeddedResource.GetResourceContents("resources/SagaIHandleEventHandler.sbn-cs"),
-                //     "resources/SagaIHandleEventHandler.sbn-cs");
-                //
-                // var source = template.Render(new
-                // {
-                //     Namespace = namespaceDeclaration.Name,
-                //     Classname = className,
-                //     Saga = classDeclaration.Identifier.ValueText,
-                //     Events = identifierNames.Select(i => i.Identifier.ValueText)
-                // });
-                //
-                // context.AddSource($"{className}.g.cs", SourceText.From(source, Encoding.UTF8));
+                var notificationName = handlerIdentifierNameSyntax.Identifier.ValueText;
+                var className = $"{sagaName}{notificationName}Handler";
+                
+                var source = template.Render(new
+                {
+                    Namespace = namespaceDeclaration.Name,
+                    Classname = className,
+                    Saga = sagaName,
+                    Notification = notificationName 
+                });
+                
+                context.AddSource($"{className}.g.cs", SourceText.From(source, Encoding.UTF8));
             }
         }
     }

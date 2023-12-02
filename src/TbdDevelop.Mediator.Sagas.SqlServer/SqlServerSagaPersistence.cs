@@ -11,36 +11,35 @@ namespace TbdDevelop.Mediator.Sagas.SqlServer;
 public class SqlServerSagaPersistence : ISagaPersistence
 {
     private readonly IDbContextFactory<SagaDbContext> _contextFactory;
-    private readonly ILogger<SqlServerSagaPersistence> _logger;
-
+    
     public SqlServerSagaPersistence(
-        IDbContextFactory<SagaDbContext> contextFactory,
-        ILogger<SqlServerSagaPersistence> logger
+        IDbContextFactory<SagaDbContext> contextFactory
     )
     {
         _contextFactory = contextFactory;
-        _logger = logger;
     }
 
-    public TSaga Retrieve<TSaga, TState>(Guid identifier)
+    public async Task<TSaga?> FetchSagaIfExistsByOrchestrationId<TSaga, TState>(Guid identifier, CancellationToken cancellationToken = default)
         where TSaga : Saga<TState>
         where TState : class, new()
     {
-        var saga = Activator.CreateInstance(typeof(TSaga), BindingFlags.Public | BindingFlags.Instance,
-            new[] { identifier }) as TSaga ?? throw new InvalidOperationException();
-
-        using var context = _contextFactory.CreateDbContext();
+        await using var context = await _contextFactory.CreateDbContextAsync(cancellationToken);
 
         var sagaFromDb = context.Sagas.SingleOrDefault(s => s.OrchestrationIdentifier == identifier);
 
-        saga.ApplyState(sagaFromDb is not null
-            ? JsonSerializer.Deserialize<TState>(sagaFromDb.State) ?? new TState()
-            : new TState());
+        if (sagaFromDb is null)
+        {
+            return null;
+        }
+        
+        var saga = Activator.CreateInstance(typeof(TSaga), identifier) as TSaga ?? throw new InvalidOperationException();
+
+        saga.ApplyState(JsonSerializer.Deserialize<TState>(sagaFromDb.State) ?? new TState());
 
         return saga;
     }
 
-    public async Task Save<TSaga>(TSaga saga, CancellationToken cancellationToken)
+    public async Task Save<TSaga>(TSaga saga, CancellationToken cancellationToken = default)
         where TSaga : class, ISaga
     {
         await using var context = await _contextFactory.CreateDbContextAsync(cancellationToken);
