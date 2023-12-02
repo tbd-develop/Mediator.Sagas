@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "TbdDevelop.Mediator.Saga.Generators": {
+      "commandName": "DebugRoslynComponent",
+      "targetProject": "../../tests/TbdDevelop.Mediator.Saga.Generators.Tests/TbdDevelop.Mediator.Saga.Generators.Tests.csproj",
+      "environmentVariables": {
+        
+      }
+    }
+  }
+}
