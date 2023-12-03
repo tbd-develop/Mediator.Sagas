@@ -33,10 +33,10 @@ public abstract class SagaHandlerEventGenerator
                 var notificationName = handlerIdentifierNameSyntax.Identifier.ValueText;
                 var className = $"{sagaName}{notificationName}Handler";
 
-                var handlerNameSpace = handlerIdentifierNameSyntax
-                    .Ancestors()
-                    .OfType<FileScopedNamespaceDeclarationSyntax>()
-                    .First();
+                var symbolInfo = context.Compilation.GetSemanticModel(handlerIdentifierNameSyntax.SyntaxTree)
+                    .GetSymbolInfo(handlerIdentifierNameSyntax);
+
+                var handlerNameSpace = symbolInfo.Symbol?.ContainingNamespace.ToString();
 
                 var source = template.Render(new
                 {
@@ -44,7 +44,7 @@ public abstract class SagaHandlerEventGenerator
                     Classname = className,
                     Saga = sagaName,
                     Notification = notificationName,
-                    Usings = new[] { handlerNameSpace.Name.ToString() }
+                    Usings = new[] { handlerNameSpace }
                 });
 
                 context.AddSource($"{className}.g.cs", SourceText.From(source, Encoding.UTF8));
