@@ -2,9 +2,9 @@
 
 public class when_single_handler_is_implemented_but_no_saga_exists
 {
-    public SampleSagaSampleNotificationHandler Subject;
-    public ISagaPersistence SagaPersistence;
-    public IMediator Mediator;
+    public SampleSagaSampleNotificationHandler Subject = null!;
+    public ISagaPersistence SagaPersistence = null!;
+    public IMediator Mediator = null!;
 
     public Guid OrchestratingIdentifier = new();
     public string Name = "Name";

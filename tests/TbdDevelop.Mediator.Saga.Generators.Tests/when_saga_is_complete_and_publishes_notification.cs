@@ -2,10 +2,10 @@
 
 public class when_saga_is_complete_and_publishes_notification
 {
-    private ISagaPersistence SagaPersistence;
-    private IMediator Mediator;
+    private ISagaPersistence SagaPersistence = null!;
+    private IMediator Mediator = null!;
     private Guid OrchestrationIdentifier = new();
-    private PublishingSagaSampleNotificationHandler Subject;
+    private PublishingSagaSampleNotificationHandler Subject = null!;
 
     public when_saga_is_complete_and_publishes_notification()
     {

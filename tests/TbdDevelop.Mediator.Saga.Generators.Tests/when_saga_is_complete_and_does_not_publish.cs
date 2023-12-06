@@ -4,10 +4,10 @@ namespace TbdDevelop.Mediator.Saga.Generators.Tests;
 
 public class when_saga_is_complete_and_does_not_publish
 {
-    private ISagaPersistence SagaPersistence;
-    private IMediator Mediator;
+    private ISagaPersistence SagaPersistence = null!;
+    private IMediator Mediator = null!;
     private Guid OrchestrationIdentifier = new();
-    private NonPublishingSagaSampleNotificationHandler Subject;
+    private NonPublishingSagaSampleNotificationHandler Subject = null!;
 
     public when_saga_is_complete_and_does_not_publish()
     {
