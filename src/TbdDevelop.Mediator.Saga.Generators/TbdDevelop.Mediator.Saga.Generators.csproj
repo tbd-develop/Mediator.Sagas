@@ -40,6 +40,10 @@
         <Compile Remove="resources\**"/>
         <EmbeddedResource Include="resources\**"/>
     </ItemGroup>
+    
+    <ItemGroup>
+        
+    </ItemGroup>
 
     <ItemGroup>
         <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>

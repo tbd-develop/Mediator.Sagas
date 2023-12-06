@@ -2,8 +2,13 @@
 
 namespace TbdDevelop.Mediator.Sagas.Contracts;
 
-public interface IPublishOnComplete<out TNotification>
+public interface IPublishOnComplete
+{
+    INotification Publish();
+}
+
+public interface IPublishOnComplete<out TNotification> : IPublishOnComplete
     where TNotification : INotification
 {
-    TNotification Publish();
+    new TNotification Publish();
 }

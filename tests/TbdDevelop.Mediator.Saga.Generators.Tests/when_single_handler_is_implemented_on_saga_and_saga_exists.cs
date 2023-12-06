@@ -8,6 +8,7 @@ public class when_single_handler_is_implemented_on_saga_and_saga_exists
     public SampleSagaSampleNotificationHandler Subject;
     public ISagaPersistence SagaPersistence;
     public SampleSaga Result;
+    public IMediator Mediator;
 
     public Guid OrchestratingIdentifier = new();
     public string Name = "Name";
@@ -46,12 +47,13 @@ public class when_single_handler_is_implemented_on_saga_and_saga_exists
         Result = new SampleSaga(OrchestratingIdentifier);
 
         SagaPersistence = Substitute.For<ISagaPersistence>();
+        Mediator = Substitute.For<IMediator>();
 
         SagaPersistence
             .FetchSagaIfExistsByOrchestrationId<SampleSaga>(Arg.Is(OrchestratingIdentifier))
             .Returns(Result);
 
-        Subject = new SampleSagaSampleNotificationHandler(SagaPersistence);
+        Subject = new SampleSagaSampleNotificationHandler(Mediator, SagaPersistence);
     }
 
     private void Act()
