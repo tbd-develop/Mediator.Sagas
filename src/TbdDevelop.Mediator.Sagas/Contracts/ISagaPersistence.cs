@@ -7,4 +7,5 @@ public interface ISagaPersistence
         where TSaga : class, ISaga;
 
     Task Save<T>(T saga, CancellationToken cancellationToken = default) where T : class, ISaga;
+    Task Delete<T>(T saga, CancellationToken cancellationToken = default) where T : class, ISaga;
 }

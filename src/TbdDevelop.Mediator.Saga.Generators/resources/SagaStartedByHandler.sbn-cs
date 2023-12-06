@@ -13,10 +13,10 @@ using {{using}};
 namespace {{namespace}};
 
 /// <summary>
-/// Handler for {{notification}} to {{saga}}
+/// Handler for {{notification}} to {{saga}}, will create a Saga if it does not exist
 /// </summary>
 
-public partial class {{classname}}(ISagaPersistence _persistence) : INotificationHandler<{{notification}}>
+public partial class {{classname}}(IMediator mediator, ISagaPersistence _persistence) : INotificationHandler<{{notification}}>
 {
     public async ValueTask Handle({{notification}} notification, CancellationToken cancellationToken)
     {
@@ -32,6 +32,16 @@ public partial class {{classname}}(ISagaPersistence _persistence) : INotificatio
 
         saga.Handle(notification);
 
-        await _persistence.Save(saga, cancellationToken);
+        if( saga.IsComplete) 
+        {
+            if( saga is IPublishOnComplete publisher) 
+            {
+                mediator.Publish(publisher.Publish(), cancellationToken);
+            }
+            
+            await _persistence.Delete(saga, cancellationToken); 
+        } else {
+            await _persistence.Save(saga, cancellationToken); 
+        }
     }
 }

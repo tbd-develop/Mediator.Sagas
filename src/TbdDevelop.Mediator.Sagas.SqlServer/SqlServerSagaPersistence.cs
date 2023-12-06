@@ -62,4 +62,18 @@ public class SqlServerSagaPersistence : ISagaPersistence
 
         await context.SaveChangesAsync(cancellationToken);
     }
+
+    public async Task Delete<T>(T saga, CancellationToken cancellationToken = default) where T : class, ISaga
+    {
+        await using var context = await _contextFactory.CreateDbContextAsync(cancellationToken);
+
+        var sagaFromDb = context.Sagas.SingleOrDefault(s => s.OrchestrationIdentifier == saga.OrchestrationIdentifier);
+
+        if (sagaFromDb is null)
+            return;
+
+        context.Sagas.Remove(sagaFromDb);
+
+        await context.SaveChangesAsync(cancellationToken);
+    }
 }
