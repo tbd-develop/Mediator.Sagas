@@ -9,5 +9,11 @@ public sealed class SagaDbContext : DbContext
 
     public SagaDbContext(DbContextOptions<SagaDbContext> options) : base(options)
     {
+        Database.EnsureCreated();
+    }
+    
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(SagaDbContext).Assembly);
     }
 }
