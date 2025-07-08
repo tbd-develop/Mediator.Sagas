@@ -6,7 +6,7 @@ public class when_saga_is_complete_and_publishes_notification
     private IMediator Mediator;
     private Guid OrchestrationIdentifier = new();
     private PublishingSagaSampleNotificationHandler Subject;
-
+  
     public when_saga_is_complete_and_publishes_notification()
     {
         Arrange();

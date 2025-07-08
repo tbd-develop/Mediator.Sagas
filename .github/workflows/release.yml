@@ -2,7 +2,7 @@ name: "Release to Nuget"
 
 on:
   release:
-    type: [published]
+    types: [published]
 
 jobs:
   build:
@@ -16,7 +16,7 @@ jobs:
     - name: Build
       run: dotnet build -c Release
     - name: Test
-      run: dotnet test -c Release --no-build
+      run: dotnet test -c Release --no-build 
     - name: Pack Nugets
       run: dotnet pack -c Release -p:PackageVersion=${{ github.event.release.tag_name }} --no-build --output .
     - name: Push To Nuget
