@@ -2,16 +2,13 @@
 
 namespace TbdDevelop.Mediator.Saga.Generators.Tests.Sample.Saga;
 
-public class MultipleHandlerSaga : Saga<MultipleHandlerSagaState>,
-    IHandle<SampleNotification>,
-    IHandle<FurtherNotification>
+public class MultipleHandlerSaga(Guid orchestrationIdentifier)
+    : Saga<MultipleHandlerSagaState>(orchestrationIdentifier),
+        IHandle<SampleNotification>,
+        IHandle<FurtherNotification>
 {
-    public MultipleHandlerSaga(Guid orchestrationIdentifier) : base(orchestrationIdentifier)
-    {
-        
-    }
-
     public override bool IsComplete { get; }
+
     public void Handle(SampleNotification @event)
     {
         throw new NotImplementedException();

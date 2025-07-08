@@ -1,9 +1,9 @@
-﻿using System.Text;
+﻿using System.Collections.Immutable;
+using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using Scriban;
-using TbdDevelop.Mediator.Saga.Generators.Receivers;
 
 namespace TbdDevelop.Mediator.Saga.Generators.Infrastructure;
 
@@ -12,13 +12,82 @@ public abstract class SagaHandlerEventGenerator
     public abstract string TemplateName { get; }
     public abstract string HandlerInterfaceName { get; }
 
-    protected void Generate(GeneratorExecutionContext context, FindSagasWithHandlerSyntaxReceiver receiver)
+    protected void Generate(IncrementalGeneratorInitializationContext context)
     {
-        foreach (var row in receiver.Candidates)
+        var sagaCandidates = context.SyntaxProvider
+            .CreateSyntaxProvider(
+                predicate: (node, _) => IsEntityClass(node),
+                transform: (ctx, _) => GetEntityInfo(ctx));
+
+        var candidateCompilation = context.CompilationProvider.Combine(sagaCandidates.Collect());
+
+        context.RegisterSourceOutput(candidateCompilation, GenerateEntityCode);
+    }
+
+    private bool IsEntityClass(SyntaxNode node)
+    {
+        if (node is not ClassDeclarationSyntax classDeclaration)
         {
-            var sagaClassDeclaration = row.Key;
+            return false;
+        }
+
+        if (classDeclaration.BaseList == null)
+        {
+            return false;
+        }
+
+        var types = classDeclaration
+            .BaseList
+            .Types;
+
+        var isSaga = types.Any(t => t.Type is GenericNameSyntax
+        {
+            Identifier.ValueText: "Saga"
+        });
+
+        var containsHandlerInterface = types
+            .Select(t => t.Type)
+            .OfType<GenericNameSyntax>()
+            .Any(t => t.Identifier.ValueText == HandlerInterfaceName);
+
+        return isSaga && containsHandlerInterface;
+    }
+
+    private EntityInfo? GetEntityInfo(GeneratorSyntaxContext context)
+    {
+        if (context.Node is not ClassDeclarationSyntax declaration)
+        {
+            return null;
+        }
+
+        var handlerIdentifiers = declaration.BaseList!.Types
+            .Select(bt => bt.Type)
+            .OfType<GenericNameSyntax>()
+            .Where(genericName =>
+                genericName.Identifier.ValueText != "Saga" &&
+                genericName.Identifier.ValueText == HandlerInterfaceName &&
+                genericName.TypeArgumentList.Arguments.Count == 1 &&
+                genericName.TypeArgumentList.Arguments[0] is IdentifierNameSyntax)
+            .Select(genericName => genericName.TypeArgumentList.Arguments[0] as IdentifierNameSyntax)
+            .Where(id => id != null)
+            .ToList();
+
+        return handlerIdentifiers.Any()
+            ? new EntityInfo(declaration, handlerIdentifiers)
+            : null;
+    }
+
+    private void GenerateEntityCode(
+        SourceProductionContext productionContext,
+        (Compilation, ImmutableArray<EntityInfo?>) source)
+    {
+        var (compilation, candidates) = source;
+
+        foreach (var candidate in candidates)
+        {
+            var sagaClassDeclaration = candidate!.Declaration;
             var sagaName = sagaClassDeclaration.Identifier.ValueText;
-            var handlers = row.Value;
+            var handlers = candidate.HandlerIdentifiers;
 
             var namespaceDeclaration = sagaClassDeclaration
                 .Ancestors()
@@ -28,27 +97,32 @@ public abstract class SagaHandlerEventGenerator
             var template = Template.Parse(
                 EmbeddedResource.GetResourceContents(TemplateName), TemplateName);
 
-            foreach (var handlerIdentifierNameSyntax in handlers)
+            var model = compilation.GetSemanticModel(sagaClassDeclaration.SyntaxTree);
+
+            foreach (var handlerIdentifierNameSyntax in handlers.Where(x => x is not null))
             {
-                var notificationName = handlerIdentifierNameSyntax.Identifier.ValueText;
+                var notificationName = handlerIdentifierNameSyntax!.Identifier.ValueText;
                 var className = $"{sagaName}{notificationName}Handler";
+                var handlerNamespace = model.GetDeclaredSymbol(sagaClassDeclaration)
+                    ?.ContainingNamespace.ToString() ?? string.Empty;
 
-                var symbolInfo = context.Compilation.GetSemanticModel(handlerIdentifierNameSyntax.SyntaxTree)
-                    .GetSymbolInfo(handlerIdentifierNameSyntax);
-
-                var handlerNameSpace = symbolInfo.Symbol?.ContainingNamespace.ToString();
-
-                var source = template.Render(new
+                var sourceText = template.Render(new
                 {
                     Namespace = namespaceDeclaration.Name,
                     Classname = className,
                     Saga = sagaName,
                     Notification = notificationName,
-                    Usings = new[] { handlerNameSpace }
+                    Usings = new[] { handlerNamespace },
                 });
 
-                context.AddSource($"{className}.g.cs", SourceText.From(source, Encoding.UTF8));
+                productionContext.AddSource($"{className}.cs", SourceText.From(sourceText, Encoding.UTF8));
             }
         }
+    }
+
+    private sealed class EntityInfo(ClassDeclarationSyntax declaration, IEnumerable<IdentifierNameSyntax> identifiers)
+    {
+        public ClassDeclarationSyntax Declaration { get; } = declaration;
+        public IEnumerable<IdentifierNameSyntax> HandlerIdentifiers { get; } = identifiers;
     }
 }

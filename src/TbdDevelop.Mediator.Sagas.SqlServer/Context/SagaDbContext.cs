@@ -9,5 +9,6 @@ public sealed class SagaDbContext : DbContext
 
     public SagaDbContext(DbContextOptions<SagaDbContext> options) : base(options)
     {
+        Database.EnsureCreated();
     }
 }

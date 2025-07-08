@@ -1,4 +1,5 @@
-﻿namespace TbdDevelop.Mediator.Sagas.SqlServer.Models;
+﻿
+namespace TbdDevelop.Mediator.Sagas.SqlServer.Models;
 
 public class Saga
 {
