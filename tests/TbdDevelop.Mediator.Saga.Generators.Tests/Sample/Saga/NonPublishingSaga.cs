@@ -2,14 +2,11 @@
 
 namespace TbdDevelop.Mediator.Saga.Generators.Tests.Sample.Saga;
 
-public class NonPublishingSaga : Saga<SampleSagaState>,
-    IAmStartedBy<SampleNotification>
+public class NonPublishingSaga(Guid orchestrationIdentifier)
+    : Saga<SampleSagaState>(orchestrationIdentifier),
+        IAmStartedBy<SampleNotification>
 {
     public bool HandlerWasCalled { get; private set; }
-
-    public NonPublishingSaga(Guid orchestrationIdentifier) : base(orchestrationIdentifier)
-    {
-    }
 
     public override bool IsComplete => HandlerWasCalled;
 

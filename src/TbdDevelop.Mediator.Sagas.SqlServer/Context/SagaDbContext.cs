@@ -11,9 +11,4 @@ public sealed class SagaDbContext : DbContext
     {
         Database.EnsureCreated();
     }
-    
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(SagaDbContext).Assembly);
-    }
 }

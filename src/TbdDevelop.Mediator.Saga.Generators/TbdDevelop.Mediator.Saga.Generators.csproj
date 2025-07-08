@@ -1,12 +1,13 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <LangVersion>latest</LangVersion>
-        <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+
         <IsRoslynComponent>true</IsRoslynComponent>
+        <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
         <PackageScribanIncludeSource>true</PackageScribanIncludeSource>
 
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -23,22 +24,21 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.CSharp" Version="4.7.0" PrivateAssets="all"/>
-        <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4" PrivateAssets="all"/>
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.8.0" PrivateAssets="all"/>
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.8.0" PrivateAssets="all"/>
-        <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.8.0" PrivateAssets="all"/>
-        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4">
+        <PackageReference Include="Microsoft.CSharp" PrivateAssets="all" />
+        <PackageReference Include="System.Threading.Tasks.Extensions" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.CodeAnalysis.Common" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
 
-        <PackageReference Include="Scriban" Version="5.9.0" IncludeAssets="Build"/>
+        <PackageReference Include="Scriban" IncludeAssets="Build" />
     </ItemGroup>
 
     <ItemGroup>
-        <Compile Remove="resources\**"/>
-        <EmbeddedResource Include="resources\**"/>
+        <Compile Remove="resources\**" />
+        <EmbeddedResource Include="resources\**" />
     </ItemGroup>
     
     <ItemGroup>
@@ -46,7 +46,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
+        <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
     </ItemGroup>
 
 </Project>
