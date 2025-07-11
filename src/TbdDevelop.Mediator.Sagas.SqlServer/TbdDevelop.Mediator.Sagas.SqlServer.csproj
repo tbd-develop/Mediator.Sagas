@@ -13,10 +13,15 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
+      <PackageReference Include="Microsoft.Identity.Client" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\TbdDevelop.Mediator.Sagas\TbdDevelop.Mediator.Sagas.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ReferencePathWithRefAssemblies Update="C:\Users\terry\.nuget\packages\microsoft.identity.client\4.61.3\lib\net6.0\Microsoft.Identity.Client.dll" />
     </ItemGroup>
 
 </Project>
