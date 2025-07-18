@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using TbdDevelop.Mediator.Sagas.Configuration;
 using TbdDevelop.Mediator.Sagas.Contracts;
 using TbdDevelop.Mediator.Sagas.SqlServer.Context;
@@ -15,6 +16,8 @@ public static class ServiceCollectionExtensions
             collection.AddPooledDbContextFactory<SagaDbContext>(configure =>
                 configure.UseSqlServer(connectionString));
 
+            collection.RemoveAll<ISagaPersistence>();
+            
             collection.AddSingleton<ISagaPersistence, SqlServerSagaPersistence>();
         });
 

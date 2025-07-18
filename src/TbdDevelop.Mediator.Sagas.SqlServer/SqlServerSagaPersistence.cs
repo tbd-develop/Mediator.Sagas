@@ -1,35 +1,26 @@
-﻿using System.Reflection;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using TbdDevelop.Mediator.Sagas.Contracts;
 using TbdDevelop.Mediator.Sagas.SqlServer.Context;
 using TbdDevelop.Mediator.Sagas.SqlServer.Models;
 
 namespace TbdDevelop.Mediator.Sagas.SqlServer;
 
-public class SqlServerSagaPersistence : ISagaPersistence
+public class SqlServerSagaPersistence(IDbContextFactory<SagaDbContext> contextFactory) : ISagaPersistence
 {
-    private readonly IDbContextFactory<SagaDbContext> _contextFactory;
-
-    public SqlServerSagaPersistence(
-        IDbContextFactory<SagaDbContext> contextFactory
-    )
-    {
-        _contextFactory = contextFactory;
-    }
-
     public async Task<TSaga?> FetchSagaIfExistsByOrchestrationId<TSaga>(Guid identifier,
         CancellationToken cancellationToken = default)
         where TSaga : class, ISaga
     {
-        await using var context = await _contextFactory.CreateDbContextAsync(cancellationToken);
+        await using var context = await contextFactory.CreateDbContextAsync(cancellationToken);
 
-        var sagaFromDb = context.Sagas.SingleOrDefault(s => s.OrchestrationIdentifier == identifier);
+        var sagaFromDb = await context.Sagas.SingleOrDefaultAsync(
+            s => s.OrchestrationIdentifier == identifier,
+            cancellationToken: cancellationToken);
 
         if (sagaFromDb is null)
         {
-            return default;
+            return null;
         }
 
         var saga = Activator.CreateInstance(typeof(TSaga), identifier) as TSaga ??
@@ -43,9 +34,11 @@ public class SqlServerSagaPersistence : ISagaPersistence
     public async Task Save<TSaga>(TSaga saga, CancellationToken cancellationToken = default)
         where TSaga : class, ISaga
     {
-        await using var context = await _contextFactory.CreateDbContextAsync(cancellationToken);
+        await using var context = await contextFactory.CreateDbContextAsync(cancellationToken);
 
-        var sagaFromDb = context.Sagas.SingleOrDefault(s => s.OrchestrationIdentifier == saga.OrchestrationIdentifier);
+        var sagaFromDb = await context.Sagas.SingleOrDefaultAsync(
+            s => s.OrchestrationIdentifier == saga.OrchestrationIdentifier,
+            cancellationToken: cancellationToken);
 
         if (sagaFromDb is null)
         {
@@ -65,12 +58,16 @@ public class SqlServerSagaPersistence : ISagaPersistence
 
     public async Task Delete<T>(T saga, CancellationToken cancellationToken = default) where T : class, ISaga
     {
-        await using var context = await _contextFactory.CreateDbContextAsync(cancellationToken);
+        await using var context = await contextFactory.CreateDbContextAsync(cancellationToken);
 
-        var sagaFromDb = context.Sagas.SingleOrDefault(s => s.OrchestrationIdentifier == saga.OrchestrationIdentifier);
+        var sagaFromDb = await context.Sagas.SingleOrDefaultAsync(
+            s => s.OrchestrationIdentifier == saga.OrchestrationIdentifier,
+            cancellationToken);
 
         if (sagaFromDb is null)
+        {
             return;
+        }
 
         context.Sagas.Remove(sagaFromDb);
 
