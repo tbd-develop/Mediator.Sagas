@@ -7,8 +7,6 @@ public class MultipleHandlerSaga(Guid orchestrationIdentifier)
         IHandle<SampleNotification>,
         IHandle<FurtherNotification>
 {
-    public override bool IsComplete { get; }
-
     public void Handle(SampleNotification @event)
     {
         throw new NotImplementedException();

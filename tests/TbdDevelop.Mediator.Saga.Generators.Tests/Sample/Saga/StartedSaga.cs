@@ -9,12 +9,10 @@ public class StartedSaga(Guid orchestrationIdentifier)
     public bool HandlerWasCalled { get; private set; }
     public SampleNotification NotificationWas { get; private set; } = null!;
 
-    public override bool IsComplete { get; }
-
     public void Handle(SampleNotification @event)
     {
         HandlerWasCalled = true;
         NotificationWas = @event;
-        State.Data = new object[] { @event };
+        State.Data = [@event];
     }
 }
