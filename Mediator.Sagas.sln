@@ -17,7 +17,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{97A3286A-3
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integration", "Integration", "{F37962D8-7AF4-446E-B931-4E3DC8BA51A6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlServer.Integration.Tests", "SqlServer.Integration.Tests\SqlServer.Integration.Tests.csproj", "{2AC79507-BDCB-400C-A7B4-288798D36EE6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TbdDevelop.Mediator.Sagas.MongoDb", "src\TbdDevelop.Mediator.Sagas.MongoDb\TbdDevelop.Mediator.Sagas.MongoDb.csproj", "{9A090BF8-D5B6-4F88-BA3C-46473BCAA50C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDb.Integration.Tests", "tests\MongoDb.Integration.Tests\MongoDb.Integration.Tests.csproj", "{B852BC0E-D74F-4808-9D30-430ED54C2C4D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.Base", "tests\Integration.Base\Integration.Base.csproj", "{CE97FEC9-07C6-4254-B1BF-237ACE34D332}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TbdDevelop.Mediator.Sagas.Persistence", "src\TbdDevelop.Mediator.Sagas.Persistence\TbdDevelop.Mediator.Sagas.Persistence.csproj", "{AA24896D-E282-4941-BC7F-91C5ABAE0744}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlServer.Integration.Tests", "tests\SqlServer.Integration.Tests\SqlServer.Integration.Tests.csproj", "{D85253E2-E4F7-4683-8303-ECB25649D00C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,13 +49,32 @@ Global
 		{FBD7C32C-46AB-4049-9023-FF5FC92DB3A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FBD7C32C-46AB-4049-9023-FF5FC92DB3A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FBD7C32C-46AB-4049-9023-FF5FC92DB3A4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2AC79507-BDCB-400C-A7B4-288798D36EE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2AC79507-BDCB-400C-A7B4-288798D36EE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2AC79507-BDCB-400C-A7B4-288798D36EE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2AC79507-BDCB-400C-A7B4-288798D36EE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A090BF8-D5B6-4F88-BA3C-46473BCAA50C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A090BF8-D5B6-4F88-BA3C-46473BCAA50C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A090BF8-D5B6-4F88-BA3C-46473BCAA50C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A090BF8-D5B6-4F88-BA3C-46473BCAA50C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B852BC0E-D74F-4808-9D30-430ED54C2C4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B852BC0E-D74F-4808-9D30-430ED54C2C4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B852BC0E-D74F-4808-9D30-430ED54C2C4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B852BC0E-D74F-4808-9D30-430ED54C2C4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE97FEC9-07C6-4254-B1BF-237ACE34D332}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE97FEC9-07C6-4254-B1BF-237ACE34D332}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE97FEC9-07C6-4254-B1BF-237ACE34D332}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE97FEC9-07C6-4254-B1BF-237ACE34D332}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA24896D-E282-4941-BC7F-91C5ABAE0744}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA24896D-E282-4941-BC7F-91C5ABAE0744}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA24896D-E282-4941-BC7F-91C5ABAE0744}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA24896D-E282-4941-BC7F-91C5ABAE0744}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D85253E2-E4F7-4683-8303-ECB25649D00C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D85253E2-E4F7-4683-8303-ECB25649D00C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D85253E2-E4F7-4683-8303-ECB25649D00C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D85253E2-E4F7-4683-8303-ECB25649D00C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{FBD7C32C-46AB-4049-9023-FF5FC92DB3A4} = {1E7C0BE5-45AB-4872-8E55-2E1C974BDC4F}
-		{2AC79507-BDCB-400C-A7B4-288798D36EE6} = {F37962D8-7AF4-446E-B931-4E3DC8BA51A6}
+		{B852BC0E-D74F-4808-9D30-430ED54C2C4D} = {F37962D8-7AF4-446E-B931-4E3DC8BA51A6}
+		{CE97FEC9-07C6-4254-B1BF-237ACE34D332} = {F37962D8-7AF4-446E-B931-4E3DC8BA51A6}
+		{F37962D8-7AF4-446E-B931-4E3DC8BA51A6} = {1E7C0BE5-45AB-4872-8E55-2E1C974BDC4F}
+		{D85253E2-E4F7-4683-8303-ECB25649D00C} = {F37962D8-7AF4-446E-B931-4E3DC8BA51A6}
 	EndGlobalSection
 EndGlobal

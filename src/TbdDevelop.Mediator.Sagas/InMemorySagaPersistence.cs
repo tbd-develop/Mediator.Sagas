@@ -46,4 +46,11 @@ public class InMemorySagaPersistence : ISagaPersistence
 
         return Task.CompletedTask;
     }
+
+    public Task<IEnumerable<ISaga>> AllSagas(CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return Task.FromResult(_sagas.Values.AsEnumerable());
+    }
 }

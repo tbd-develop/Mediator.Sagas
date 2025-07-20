@@ -1,15 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.Configuration;
-using TbdDevelop.Mediator.Sagas.SqlServer.Models;
+using TbdDevelop.Mediator.Sagas.Persistence.Models;
 
 namespace TbdDevelop.Mediator.Sagas.SqlServer.Configurations;
 
-public class SagaEntityTypeConfiguration(IConfiguration configuration) : IEntityTypeConfiguration<Saga>
+public class SagaEntityTypeConfiguration : IEntityTypeConfiguration<Saga>
 {
     public void Configure(EntityTypeBuilder<Saga> builder)
     {
-        builder.ToTable(configuration["sagas:tableName"] ?? "Sagas");
-        builder.HasKey(k => k.Id);
+        builder.ToTable("Sagas", "sagas");
+
+        builder.HasKey(k => k.OrchestrationIdentifier)
+            .HasName("PK_saga_orchestration_id");
     }
 }
