@@ -31,7 +31,7 @@ public class when_single_handler_is_implemented_but_no_saga_exists
         SagaPersistence = Substitute.For<ISagaPersistence>();
 
         SagaPersistence
-            .FetchSagaIfExistsByOrchestrationId<SampleSaga>(Arg.Is(OrchestratingIdentifier))
+            .FetchSagaByOrchestrationIdentifier<SampleSaga>(Arg.Is(OrchestratingIdentifier))
             .Returns(default(SampleSaga));
 
         Subject = new SampleSagaSampleNotificationHandler(Mediator, SagaPersistence);

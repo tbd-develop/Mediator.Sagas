@@ -19,12 +19,13 @@ public class WhenSagaIsPersisted(
         await using (fixture.RedirectOutput(outputHelper))
         {
             // Arrange
-
-            var saga = new SampleSaga(_sagaOrchestrationId);
-
-            // Act
-
             await using var scope = fixture.Provider.Value.CreateAsyncScope();
+
+            var factory = scope.ServiceProvider.GetRequiredService<ISagaFactory>();
+
+            var saga = factory.CreateSaga<SampleSaga>(_sagaOrchestrationId);
+            
+            // Act
 
             var persistence = scope.ServiceProvider.GetRequiredService<ISagaPersistence>();
 
@@ -35,7 +36,7 @@ public class WhenSagaIsPersisted(
             // Assert
 
             var retrieved =
-                await persistence.FetchSagaIfExistsByOrchestrationId<SampleSaga>(_sagaOrchestrationId,
+                await persistence.FetchSagaByOrchestrationIdentifier<SampleSaga>(_sagaOrchestrationId,
                     CancellationToken.None);
 
             Assert.Equal($"{_sampleId}", retrieved.State.Value);
@@ -49,7 +50,7 @@ public class WhenSagaIsPersisted(
         {
             // Arrange
 
-            var saga = new SampleSaga(_sagaOrchestrationId);
+            var saga = new SampleSaga();
 
             // Act
 
@@ -62,7 +63,7 @@ public class WhenSagaIsPersisted(
             // Assert
 
             var retrieved =
-                await persistence.FetchSagaIfExistsByOrchestrationId<SampleSaga>(_sagaOrchestrationId,
+                await persistence.FetchSagaByOrchestrationIdentifier<SampleSaga>(_sagaOrchestrationId,
                     CancellationToken.None);
 
             Assert.NotNull(retrieved);

@@ -2,7 +2,7 @@
 
 namespace TbdDevelop.Mediator.Saga.Generators.Tests.Sample.Saga;
 
-public class PublishingSaga(Guid orchestrationIdentifier) : Saga<SampleSagaState>(orchestrationIdentifier),
+public class PublishingSaga : Saga<SampleSagaState>,
     IAmStartedBy<SampleNotification>,
     IPublishOnComplete<CompleteNotification>
 {

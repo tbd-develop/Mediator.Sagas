@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using TbdDevelop.Mediator.Sagas.Contracts;
+using TbdDevelop.Mediator.Sagas.Infrastructure;
 using TbdDevelop.Mediator.Sagas.SqlServer;
 using TbdDevelop.Mediator.Sagas.SqlServer.Context;
 using Testcontainers.MsSql;
@@ -32,6 +33,7 @@ public class SagaPersistenceFixture : IAsyncLifetime
             factory.UseSqlServer(_msSqlContainer.GetConnectionString()));
 
         _services.AddScoped<ISagaPersistence, SqlServerSagaPersistence>();
+        _services.AddScoped<ISagaFactory, SagaFactory>();
 
         _services.AddLogging(builder =>
         {

@@ -3,10 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using TbdDevelop.Mediator.Sagas.Contracts;
 using TbdDevelop.Mediator.Sagas.Persistence.Extensions;
 using TbdDevelop.Mediator.Sagas.Persistence.Models;
+using TbdDevelop.Mediator.Sagas.Persistence.Specifications;
 
 namespace TbdDevelop.Mediator.Sagas.Persistence;
 
-public abstract class SagaPersistenceBase<TContext>(IDbContextFactory<TContext> contextFactory)
+public abstract class SagaPersistenceBase<TContext>(
+    IDbContextFactory<TContext> contextFactory,
+    ISagaFactory sagaFactory)
     : ISagaPersistence
     where TContext : DbContext
 {
@@ -17,7 +20,7 @@ public abstract class SagaPersistenceBase<TContext>(IDbContextFactory<TContext> 
     /// <param name="cancellationToken"></param>
     /// <typeparam name="TSaga">ISaga type</typeparam>
     /// <returns>Saga or null</returns>
-    public async Task<TSaga?> FetchSagaIfExistsByOrchestrationId<TSaga>(Guid identifier,
+    public async Task<TSaga?> FetchSagaByOrchestrationIdentifier<TSaga>(Guid identifier,
         CancellationToken cancellationToken = default)
         where TSaga : class, ISaga
     {
@@ -32,7 +35,7 @@ public abstract class SagaPersistenceBase<TContext>(IDbContextFactory<TContext> 
             return null;
         }
 
-        return ConstructSagaFromModel(sagaFromDb) as TSaga;
+        return sagaFactory.BuildSagaFromModel<TSaga>(sagaFromDb);
     }
 
     /// <summary>
@@ -61,8 +64,7 @@ public abstract class SagaPersistenceBase<TContext>(IDbContextFactory<TContext> 
                 State = saga.State.AsJson(),
                 NextTriggerTime = saga.NextTriggerTime,
                 TriggerInterval = saga.TriggerInterval,
-                LastTriggered = null,
-                MaximumTriggerCount = saga.MaximumTriggerCount,
+                LastTriggered = null
             });
         }
         else
@@ -101,44 +103,24 @@ public abstract class SagaPersistenceBase<TContext>(IDbContextFactory<TContext> 
     /// <summary>
     /// Will retrieve all current incomplete sagas
     /// </summary>
+    /// <param name="withinMinutes">Number of minutes of window in which to check triggers</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <exception cref="InvalidOperationException"></exception>
-    public async Task<IEnumerable<ISaga>> AllSagas(CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<ISaga>> AllSagasToTrigger(int withinMinutes,
+        CancellationToken cancellationToken = default)
     {
         await using var context = await contextFactory.CreateDbContextAsync(cancellationToken);
 
-        var result = from s in context.Set<Saga>()
+        var spec = new SagasToTriggerSpec(withinMinutes);
+
+        var result = from s in spec.Execute(context.Set<Saga>())
                 .AsNoTracking()
                 .AsEnumerable()
-            let saga = ConstructSagaFromModel(s)
+            let saga = sagaFactory.BuildSagaFromModel(s)
             where saga is not null && !saga.IsComplete
             select saga;
 
         return result.AsEnumerable();
-    }
-
-    private static ISaga? ConstructSagaFromModel(Saga saga)
-    {
-        var type = Type.GetType(saga.TypeIdentifier);
-
-        if (type is null)
-        {
-            return null;
-        }
-
-        if (Activator.CreateInstance(type, saga.OrchestrationIdentifier) is not ISaga instance)
-        {
-            return null;
-        }
-
-        instance.NextTriggerTime = saga.NextTriggerTime;
-        instance.TriggerInterval = saga.TriggerInterval;
-        instance.LastTriggered = saga.LastTriggered;
-        instance.MaximumTriggerCount = saga.MaximumTriggerCount;
-
-        instance.ApplyState(saga.State.FromJson(instance.State.GetType()));
-
-        return instance;
     }
 }

@@ -2,8 +2,8 @@
 
 namespace TbdDevelop.Mediator.Saga.Generators.Tests.Sample.Saga;
 
-public class MultipleHandlerSaga(Guid orchestrationIdentifier)
-    : Saga<MultipleHandlerSagaState>(orchestrationIdentifier),
+public class MultipleHandlerSaga
+    : Saga<MultipleHandlerSagaState>,
         IHandle<SampleNotification>,
         IHandle<FurtherNotification>
 {
