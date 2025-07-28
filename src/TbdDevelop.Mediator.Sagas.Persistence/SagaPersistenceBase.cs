@@ -30,12 +30,7 @@ public abstract class SagaPersistenceBase<TContext>(
             s => s.OrchestrationIdentifier == identifier,
             cancellationToken: cancellationToken);
 
-        if (sagaFromDb is null)
-        {
-            return null;
-        }
-
-        return sagaFactory.BuildSagaFromModel<TSaga>(sagaFromDb);
+        return sagaFromDb is null ? null : sagaFactory.BuildSagaFromModel<TSaga>(sagaFromDb);
     }
 
     /// <summary>
@@ -101,9 +96,9 @@ public abstract class SagaPersistenceBase<TContext>(
     }
 
     /// <summary>
-    /// Will retrieve all current incomplete sagas
+    /// Will retrieve all current incomplete sagas due to execute 'withinMs' of the current time
     /// </summary>
-    /// <param name="withinMs">Number of minutes of window in which to check triggers</param>
+    /// <param name="withinMs">Millisecond window in which to check triggers</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <exception cref="InvalidOperationException"></exception>
