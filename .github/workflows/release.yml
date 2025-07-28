@@ -2,24 +2,30 @@ name: "Release to Nuget"
 
 on:
   release:
-    types: [published]
+    types: [ published ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-    - name: Setup .NET SDK
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '9.0.x'
-    - name: Build
-      run: dotnet build -c Release
-    - name: Test
-      run: dotnet test -c Release --no-build 
-    - name: Pack Nugets
-      run: dotnet pack -c Release -p:PackageVersion=${{ github.event.release.tag_name }} --no-build --output .
-    - name: Push To Nuget
-      run: dotnet nuget push "*.nupkg" --api-key ${{secrets.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+      - name: Build
+        run: dotnet build -c Release
+      - name: Test
+        run: dotnet test -c Release --no-build
+      - name: Pack Sagas
+        run: dotnet pack ./src/TbdDevelop.Mediator.Sagas/ -c Release -p:PackageVersion=${{ github.event.release.tag_name }} --no-build --output .
+      - name: Pack SqlServer Persistence
+        run: dotnet pack ./src/TbdDevelop.Mediator.Sagas.SqlServer/ -c Release -p:PackageVersion=${{ github.event.release.tag_name }} --no-build --output .
+      - name: Pack SqlServer Persistence
+        run: dotnet pack ./src/TbdDevelop.Mediator.Sagas.MongoDb/ -c Release -p:PackageVersion=${{ github.event.release.tag_name }} --no-build --output .
+      - name: Push To Nuget
+        run: dotnet nuget push "*.nupkg" --api-key ${{secrets.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
+      - name: Push To Nuget
+        run: dotnet nuget push "*.nupkg" --api-key ${{secrets.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
