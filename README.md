@@ -22,10 +22,54 @@ this scenario. However, right now, this is what I need given what I know. If not
 source generators, I have stretched my legs as a developer and gone beyond my comfort zone. If you're reading this and this 
 library actually proved useful, great! 
 
+## Usage
+
+First, define a saga
+
+```csharp
+
+public class SampleNotification : INotification, IOrchestratedNotification
+{
+    public Guid OrchestrationIdentifier {get;set;}
+    public Guid SampleIdentifier {set;set;}
+}
+
+public class SampleSagaState
+{
+    public int Value {get;set;}
+}
+
+public class SampleSaga : Saga<SampleSagaState>,
+    IAmStartedBy<SampleNotification>,
+    IHandle<SampleNotification>
+{
+    public void Handle(SampleNotification @event)
+    {
+        // Do code in here 
+    }
+}
+
+```
+
+Configure Sagas in your application, i.e.
+
+With InMemoryPersistence;
+```csharp
+var host = Host.CreateApplicationBuilder();
+
+host.AddSagas(configure => { 
+    configure.RegisterSaga<SampleSaga>();
+
+    configure.UseInMemoryPersistence();
+});
+```
+
+Also available, SQL and MongoDB Persistence
+
 ## Installation
 
-```coming soon```
-
+Include Nuget for TbdDevelop.Mediator.Sagas, optionally include 
+TbdDevelop.Mediator.Sagas.MongoDb, TbdDevelop.Mediator.Sagas.SqlServer
 
 ### References
 
