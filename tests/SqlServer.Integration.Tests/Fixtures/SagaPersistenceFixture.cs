@@ -1,4 +1,5 @@
 ﻿using Integration.Base;
+using Integration.Base.Sagas.Sample;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -34,6 +35,7 @@ public class SagaPersistenceFixture : IAsyncLifetime
 
         _services.AddScoped<ISagaPersistence, SqlServerSagaPersistence>();
         _services.AddScoped<ISagaFactory, SagaFactory>();
+        _services.AddScoped<SampleSaga>();
 
         _services.AddLogging(builder =>
         {

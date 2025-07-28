@@ -35,11 +35,8 @@ namespace TbdDevelop.Mediator.Sagas.SqlServer.Migrations
                     b.Property<DateTime?>("LastTriggered")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("MaximumTriggerCount")
-                        .HasColumnType("int");
-
-                    b.Property<TimeSpan?>("NextTriggerTime")
-                        .HasColumnType("time");
+                    b.Property<DateTime?>("NextTriggerTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("State")
                         .IsRequired()
