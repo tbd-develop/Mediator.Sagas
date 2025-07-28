@@ -19,12 +19,13 @@ public class WhenSagaIsPersisted(
         await using (fixture.RedirectOutput(outputHelper))
         {
             // Arrange
-
-            var saga = new SampleSaga(orchestrationId);
-
-            // Act
-
             await using var scope = fixture.Provider.Value.CreateAsyncScope();
+            
+            var factory = scope.ServiceProvider.GetRequiredService<ISagaFactory>();
+            
+            var saga = factory.CreateSaga<SampleSaga>(orchestrationId);
+            
+            // Act
 
             var persistence = scope.ServiceProvider.GetRequiredService<ISagaPersistence>();
 
@@ -35,7 +36,7 @@ public class WhenSagaIsPersisted(
             // Assert
 
             var retrieved =
-                await persistence.FetchSagaIfExistsByOrchestrationId<SampleSaga>(orchestrationId,
+                await persistence.FetchSagaByOrchestrationIdentifier<SampleSaga>(orchestrationId,
                     CancellationToken.None);
 
             Assert.NotNull(retrieved);
@@ -52,12 +53,13 @@ public class WhenSagaIsPersisted(
         await using (fixture.RedirectOutput(outputHelper))
         {
             // Arrange
-
-            var saga = new SampleSaga(orchestrationId);
+            await using var scope = fixture.Provider.Value.CreateAsyncScope();
+            
+            var factory = scope.ServiceProvider.GetRequiredService<ISagaFactory>();
+            
+            var saga = factory.CreateSaga<SampleSaga>(orchestrationId);
 
             // Act
-
-            await using var scope = fixture.Provider.Value.CreateAsyncScope();
 
             var persistence = scope.ServiceProvider.GetRequiredService<ISagaPersistence>();
 
@@ -66,7 +68,7 @@ public class WhenSagaIsPersisted(
             // Assert
 
             var retrieved =
-                await persistence.FetchSagaIfExistsByOrchestrationId<SampleSaga>(orchestrationId,
+                await persistence.FetchSagaByOrchestrationIdentifier<SampleSaga>(orchestrationId,
                     CancellationToken.None);
 
             Assert.NotNull(retrieved);

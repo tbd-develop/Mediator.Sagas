@@ -5,7 +5,7 @@ using TbdDevelop.Mediator.Sagas.Contracts;
 
 namespace TbdDevelop.Mediator.Saga.Generators.Tests.Sample.Saga;
 
-public class SampleSaga(Guid orchestrationIdentifier) : Saga<SampleSagaState>(orchestrationIdentifier),
+public class SampleSaga : Saga<SampleSagaState>,
     IHandle<SampleNotification>
 {
     public bool HandlerWasCalled { get; private set; }

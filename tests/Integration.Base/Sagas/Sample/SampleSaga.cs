@@ -3,8 +3,8 @@ using TbdDevelop.Mediator.Sagas.Contracts;
 
 namespace Integration.Base.Sagas.Sample;
 
-public class SampleSaga(Guid orchestrationIdentifier)
-    : Saga<SimpleState>(orchestrationIdentifier),
+public class SampleSaga
+    : Saga<SimpleState>,
         IHandle<SampleNotification>
 {
     public void Handle(SampleNotification @event)

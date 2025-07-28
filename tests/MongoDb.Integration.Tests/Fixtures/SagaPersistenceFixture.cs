@@ -1,8 +1,10 @@
 ﻿using Integration.Base;
+using Integration.Base.Sagas.Sample;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using TbdDevelop.Mediator.Sagas.Contracts;
+using TbdDevelop.Mediator.Sagas.Infrastructure;
 using TbdDevelop.Mediator.Sagas.MongoDb;
 using TbdDevelop.Mediator.Sagas.MongoDb.Context;
 using Testcontainers.MongoDb;
@@ -31,6 +33,8 @@ public class SagaPersistenceFixture : IAsyncLifetime
             factory.UseMongoDB(_mongoDbContainer.GetConnectionString(), "integration-tests"));
 
         _services.AddScoped<ISagaPersistence, MongoDbSagaPersistence>();
+        _services.AddScoped<ISagaFactory, SagaFactory>();
+        _services.AddScoped<SampleSaga>();
 
         _services.AddLogging(builder =>
         {

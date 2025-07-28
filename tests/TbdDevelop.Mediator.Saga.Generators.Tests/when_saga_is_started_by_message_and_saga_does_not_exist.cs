@@ -2,10 +2,12 @@
 
 public class when_saga_is_started_by_message_and_saga_does_not_exist
 {
-    public ISagaPersistence SagaPersistence;
+    private readonly IMediator _mediator = Substitute.For<IMediator>();
+    private readonly ISagaPersistence _persistence = Substitute.For<ISagaPersistence>();
+    private readonly ISagaFactory _factory = Substitute.For<ISagaFactory>();
     public Guid OrchestrationIdentifier = Guid.NewGuid();
     public StartedSagaSampleNotificationHandler Subject;
-    public IMediator Mediator;
+
 
     public const string Name = "Name";
     public DateTime DateRegistered = DateTime.UtcNow;
@@ -22,7 +24,7 @@ public class when_saga_is_started_by_message_and_saga_does_not_exist
     [Fact]
     public void saga_is_created()
     {
-        SagaPersistence
+        _persistence
             .Received()
             .Save(Arg.Is<ISaga>(x => x.OrchestrationIdentifier == OrchestrationIdentifier),
                 Arg.Any<CancellationToken>());
@@ -47,14 +49,11 @@ public class when_saga_is_started_by_message_and_saga_does_not_exist
 
     public void Arrange()
     {
-        SagaPersistence = Substitute.For<ISagaPersistence>();
-        Mediator = Substitute.For<IMediator>();
-
-        SagaPersistence
+        _persistence
             .When(x => x.Save(Arg.Is<ISaga>(x => x.OrchestrationIdentifier == OrchestrationIdentifier),
                 Arg.Any<CancellationToken>())).Do(info => { Result = info.Arg<StartedSaga>(); });
 
-        Subject = new StartedSagaSampleNotificationHandler(Mediator, SagaPersistence);
+        Subject = new StartedSagaSampleNotificationHandler(_mediator, _factory, _persistence);
     }
 
     public void Act()

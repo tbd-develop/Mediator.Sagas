@@ -4,14 +4,13 @@ public interface ISaga
 {
     bool IsComplete { get; }
     Guid OrchestrationIdentifier { get; }
-    int MaximumTriggerCount { get; set; }
-    TimeSpan? NextTriggerTime { get; set; }
+    DateTime? NextTriggerTime { get; set; }
     TimeSpan? TriggerInterval { get; set; }
     DateTime? LastTriggered { get; set; }
     object State { get; }
-    Task OnTrigger(CancellationToken cancellationToken);
+    Task Trigger(CancellationToken cancellationToken);
 
-    void ApplyState(object state);
+    void ApplyState(Guid orchestrationIdentifier, object state);
 }
 
 public interface ISaga<TState> : ISaga
@@ -19,5 +18,5 @@ public interface ISaga<TState> : ISaga
 {
     new TState State { get; }
 
-    void ApplyState(TState state);
+    void ApplyState(Guid orchestrationIdentifier, TState state);
 }

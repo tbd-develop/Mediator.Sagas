@@ -11,7 +11,7 @@ public class InMemorySagaPersistence : ISagaPersistence
 {
     private readonly ConcurrentDictionary<Guid, ISaga> _sagas = new();
 
-    public Task<TSaga?> FetchSagaIfExistsByOrchestrationId<TSaga>(Guid identifier,
+    public Task<TSaga?> FetchSagaByOrchestrationIdentifier<TSaga>(Guid identifier,
         CancellationToken cancellationToken = default)
         where TSaga : class, ISaga
     {
@@ -47,10 +47,19 @@ public class InMemorySagaPersistence : ISagaPersistence
         return Task.CompletedTask;
     }
 
-    public Task<IEnumerable<ISaga>> AllSagas(CancellationToken cancellationToken = default)
+    public Task<IEnumerable<ISaga>> AllSagasToTrigger(int withinMs, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        return Task.FromResult(_sagas.Values.AsEnumerable());
+        var now = DateTime.UtcNow;
+        var msBeforeNow = now.Subtract(TimeSpan.FromMilliseconds(withinMs));
+
+        var results = _sagas.Values.Where(e =>
+            (e is { NextTriggerTime: not null, LastTriggered: null } && e.NextTriggerTime <= msBeforeNow) ||
+            (e is { NextTriggerTime: not null, LastTriggered: not null } && e.NextTriggerTime >= msBeforeNow &&
+             e.NextTriggerTime <= now && e.LastTriggered <= msBeforeNow)
+        ).AsEnumerable();
+
+        return Task.FromResult(results);
     }
 }

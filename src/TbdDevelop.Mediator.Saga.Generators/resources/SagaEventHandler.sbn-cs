@@ -24,7 +24,7 @@ public partial class {{classname}}(IMediator mediator, ISagaPersistence _persist
             return;
         }
 
-        var saga = await _persistence.FetchSagaIfExistsByOrchestrationId<{{saga}}>(orchestrated.OrchestrationIdentifier, cancellationToken);
+        var saga = await _persistence.FetchSagaByOrchestrationIdentifier<{{saga}}>(orchestrated.OrchestrationIdentifier, cancellationToken);
 
         if( saga is null) {
             return;

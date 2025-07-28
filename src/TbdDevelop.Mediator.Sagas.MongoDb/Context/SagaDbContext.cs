@@ -6,8 +6,6 @@ namespace TbdDevelop.Mediator.Sagas.MongoDb.Context;
 public sealed class SagaDbContext(DbContextOptions<SagaDbContext> options) 
     : DbContext(options)
 {
-    public DbSet<Saga> Sagas { get; set; } = null!;
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(SagaDbContext).Assembly);

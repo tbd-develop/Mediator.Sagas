@@ -2,11 +2,12 @@
 
 public class when_saga_is_complete_and_publishes_notification
 {
-    private ISagaPersistence SagaPersistence;
-    private IMediator Mediator;
-    private Guid OrchestrationIdentifier = new();
+    private readonly ISagaPersistence _persistence = Substitute.For<ISagaPersistence>();
+    private readonly IMediator _mediator = Substitute.For<IMediator>();
+    private readonly ISagaFactory _factory = Substitute.For<ISagaFactory>();
+    private Guid OrchestrationIdentifier = Guid.Empty;
     private PublishingSagaSampleNotificationHandler Subject;
-  
+
     public when_saga_is_complete_and_publishes_notification()
     {
         Arrange();
@@ -17,7 +18,7 @@ public class when_saga_is_complete_and_publishes_notification
     [Fact]
     public void publish_is_called()
     {
-        Mediator
+        _mediator
             .Received()
             .Publish(Arg.Is<CompleteNotification>(n => n.OrchestrationIdentifier == OrchestrationIdentifier));
     }
@@ -25,17 +26,14 @@ public class when_saga_is_complete_and_publishes_notification
     [Fact]
     public void saga_is_removed()
     {
-        SagaPersistence
+        _persistence
             .Received()
             .Delete(Arg.Is<PublishingSaga>(s => s.OrchestrationIdentifier == OrchestrationIdentifier));
     }
 
     private void Arrange()
     {
-        SagaPersistence = Substitute.For<ISagaPersistence>();
-        Mediator = Substitute.For<IMediator>();
-
-        Subject = new PublishingSagaSampleNotificationHandler(Mediator, SagaPersistence);
+        Subject = new PublishingSagaSampleNotificationHandler(_mediator, _factory, _persistence);
     }
 
     private void Act()

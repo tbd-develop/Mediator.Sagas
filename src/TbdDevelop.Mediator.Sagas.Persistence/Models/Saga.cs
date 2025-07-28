@@ -6,8 +6,7 @@ public class Saga
     public required string TypeIdentifier { get; set; }
     public bool IsComplete { get; set; }
     public string State { get; set; } = null!;
-    public TimeSpan? NextTriggerTime { get; set; }
+    public DateTime? NextTriggerTime { get; set; }
     public TimeSpan? TriggerInterval { get; set; }
     public DateTime? LastTriggered { get; set; }
-    public int MaximumTriggerCount { get; set; }
 }

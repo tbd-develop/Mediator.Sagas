@@ -3,12 +3,16 @@ using TbdDevelop.Mediator.Sagas.Contracts;
 
 namespace TbdDevelop.Mediator.Sagas.Configuration;
 
+/// <summary>
+/// Does a thing
+/// </summary>
+/// <param name="serviceCollection"></param>
 public class SagaConfiguration(IServiceCollection serviceCollection)
 {
     public SagaConfiguration RegisterSaga<TSaga>()
         where TSaga : class, ISaga
     {
-        serviceCollection.AddTransient<TSaga>();
+        serviceCollection.AddScoped<TSaga>();
 
         return this;
     }
