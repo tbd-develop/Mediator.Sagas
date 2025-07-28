@@ -2,17 +2,19 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using TbdDevelop.Mediator.Sagas.Contracts;
 
 namespace TbdDevelop.Mediator.Sagas.Services;
 
 public class SagaTriggerService(
     IServiceScopeFactory scopeFactory,
+    IOptionsMonitor<TriggerOptions> options,
     ILogger<SagaTriggerService> logger) : BackgroundService
 {
-    private const int IntervalMinutes = 5;
+    private const int DefaultIntervalMs = 1000;
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
         // every x minutes, we should check to see if we need to do anything with saga expiration? '
         // we have to check x minute, because the process to check the sagas, and the process inserting 
@@ -23,31 +25,38 @@ public class SagaTriggerService(
 
         // It would be more efficient if I could leave this process dormant until a saga trigger is necessary, 
         // but we would need to shift that awake when a new saga was inserted. 
-        while (!stoppingToken.IsCancellationRequested)
+
+        return Task.Run(async () =>
         {
-            var stopWatch = Stopwatch.StartNew();
-
-            using var scope = scopeFactory.CreateScope();
-
-            var persistence = scope.ServiceProvider.GetRequiredService<ISagaPersistence>();
-
-            var sagas = await persistence.AllSagasToTrigger(IntervalMinutes, stoppingToken);
-
-            foreach (var saga in sagas)
+            while (!stoppingToken.IsCancellationRequested)
             {
-                await saga.Trigger(stoppingToken);
+                var stopWatch = Stopwatch.StartNew();
 
-                await persistence.Save(saga, stoppingToken);
+                using var scope = scopeFactory.CreateScope();
+
+                var persistence = scope.ServiceProvider.GetRequiredService<ISagaPersistence>();
+
+                var sagas = await persistence.AllSagasToTrigger(
+                    options.CurrentValue?.IntervalMs ?? DefaultIntervalMs, stoppingToken);
+
+                foreach (var saga in sagas)
+                {
+                    await saga.Trigger(stoppingToken);
+
+                    await persistence.Save(saga, stoppingToken);
+                }
+
+                stopWatch.Stop();
+
+                var remainingDelay =
+                    TimeSpan.FromMilliseconds(options.CurrentValue?.IntervalMs ?? DefaultIntervalMs) -
+                    stopWatch.Elapsed;
+
+                if (remainingDelay > TimeSpan.Zero)
+                {
+                    await Task.Delay(remainingDelay, stoppingToken);
+                }
             }
-
-            stopWatch.Stop();
-
-            var remainingDelay = TimeSpan.FromMinutes(IntervalMinutes) - stopWatch.Elapsed;
-
-            if (remainingDelay > TimeSpan.Zero)
-            {
-                await Task.Delay(remainingDelay, stoppingToken);
-            }
-        }
+        }, stoppingToken);
     }
 }

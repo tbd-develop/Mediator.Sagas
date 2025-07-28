@@ -103,16 +103,16 @@ public abstract class SagaPersistenceBase<TContext>(
     /// <summary>
     /// Will retrieve all current incomplete sagas
     /// </summary>
-    /// <param name="withinMinutes">Number of minutes of window in which to check triggers</param>
+    /// <param name="withinMs">Number of minutes of window in which to check triggers</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <exception cref="InvalidOperationException"></exception>
-    public async Task<IEnumerable<ISaga>> AllSagasToTrigger(int withinMinutes,
+    public async Task<IEnumerable<ISaga>> AllSagasToTrigger(int withinMs,
         CancellationToken cancellationToken = default)
     {
         await using var context = await contextFactory.CreateDbContextAsync(cancellationToken);
 
-        var spec = new SagasToTriggerSpec(withinMinutes);
+        var spec = new SagasToTriggerSpec(withinMs);
 
         var result = from s in spec.Execute(context.Set<Saga>())
                 .AsNoTracking()

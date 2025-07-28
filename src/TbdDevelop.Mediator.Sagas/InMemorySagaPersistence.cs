@@ -47,10 +47,19 @@ public class InMemorySagaPersistence : ISagaPersistence
         return Task.CompletedTask;
     }
 
-    public Task<IEnumerable<ISaga>> AllSagasToTrigger(int withinMinutes, CancellationToken cancellationToken = default)
+    public Task<IEnumerable<ISaga>> AllSagasToTrigger(int withinMs, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        return Task.FromResult<IEnumerable<ISaga>>(_sagas.Values);
+        var now = DateTime.UtcNow;
+        var msBeforeNow = now.Subtract(TimeSpan.FromMilliseconds(withinMs));
+
+        var results = _sagas.Values.Where(e =>
+            (e is { NextTriggerTime: not null, LastTriggered: null } && e.NextTriggerTime <= msBeforeNow) ||
+            (e is { NextTriggerTime: not null, LastTriggered: not null } && e.NextTriggerTime >= msBeforeNow &&
+             e.NextTriggerTime <= now && e.LastTriggered <= msBeforeNow)
+        ).AsEnumerable();
+
+        return Task.FromResult(results);
     }
 }

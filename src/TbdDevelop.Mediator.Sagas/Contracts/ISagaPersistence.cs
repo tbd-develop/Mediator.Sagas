@@ -8,5 +8,5 @@ public interface ISagaPersistence
 
     Task Save<T>(T saga, CancellationToken cancellationToken = default) where T : class, ISaga;
     Task Delete<T>(T saga, CancellationToken cancellationToken = default) where T : class, ISaga;
-    Task<IEnumerable<ISaga>> AllSagasToTrigger(int withinMinutes, CancellationToken cancellationToken = default);
+    Task<IEnumerable<ISaga>> AllSagasToTrigger(int withinMs, CancellationToken cancellationToken = default);
 }

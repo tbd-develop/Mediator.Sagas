@@ -5,11 +5,13 @@ namespace TbdDevelop.Mediator.Sagas.Persistence.Specifications;
 
 public sealed class SagasToTriggerSpec : Specification<Saga>
 {
-    public SagasToTriggerSpec(int withinMinutes)
+    public SagasToTriggerSpec(int withinMs)
     {
-        var minutesBeforeNow = DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(withinMinutes));
+        var now = DateTime.UtcNow;
+        var msBeforeNow = now.Subtract(TimeSpan.FromMilliseconds(withinMs));
 
-        Query = e => e.NextTriggerTime != null && e.NextTriggerTime >= minutesBeforeNow &&
-                     (e.LastTriggered != null || e.LastTriggered < minutesBeforeNow);
+        Query = e => (e.NextTriggerTime != null && e.LastTriggered == null && e.NextTriggerTime <= msBeforeNow) ||
+                     (e.NextTriggerTime != null && e.LastTriggered != null && e.NextTriggerTime >= msBeforeNow &&
+                      e.NextTriggerTime <= now && e.LastTriggered <= msBeforeNow);
     }
 }

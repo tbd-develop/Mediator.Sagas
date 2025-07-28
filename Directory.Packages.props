@@ -4,6 +4,7 @@
     <CentralPackageTransitivePinningEnabled>false</CentralPackageTransitivePinningEnabled>
   </PropertyGroup>
   <ItemGroup>
+    <PackageVersion Include="Aspire.Hosting" Version="9.3.2" />
     <PackageVersion Include="coverlet.collector" Version="6.0.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -28,6 +29,7 @@
     <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="9.0.7" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="9.0.7" />
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="9.0.7" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.7" />
     <PackageVersion Include="Microsoft.Identity.Client" Version="4.74.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
     <PackageVersion Include="MongoDB.EntityFrameworkCore" Version="9.0.0" />
