@@ -23,10 +23,9 @@ namespace TbdDevelop.Mediator.Sagas.SqlServer.Migrations
                     TypeIdentifier = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsComplete = table.Column<bool>(type: "bit", nullable: false),
                     State = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    NextTriggerTime = table.Column<TimeSpan>(type: "time", nullable: true),
+                    NextTriggerTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     TriggerInterval = table.Column<TimeSpan>(type: "time", nullable: true),
-                    LastTriggered = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    MaximumTriggerCount = table.Column<int>(type: "int", nullable: false)
+                    LastTriggered = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {

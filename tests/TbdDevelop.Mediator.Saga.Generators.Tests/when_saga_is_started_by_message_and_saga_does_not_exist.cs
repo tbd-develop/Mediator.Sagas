@@ -5,14 +5,13 @@ public class when_saga_is_started_by_message_and_saga_does_not_exist
     private readonly IMediator _mediator = Substitute.For<IMediator>();
     private readonly ISagaPersistence _persistence = Substitute.For<ISagaPersistence>();
     private readonly ISagaFactory _factory = Substitute.For<ISagaFactory>();
-    public Guid OrchestrationIdentifier = Guid.NewGuid();
-    public StartedSagaSampleNotificationHandler Subject;
+    private StartedSagaSampleNotificationHandler _subject;
 
+    private readonly Guid _orchestrationIdentifier = Guid.NewGuid();
+    private readonly string _name = "Name";
+    private readonly DateTime _dateRegistered = DateTime.UtcNow;
 
-    public const string Name = "Name";
-    public DateTime DateRegistered = DateTime.UtcNow;
-
-    public StartedSaga Result;
+    private StartedSaga _result;
 
     public when_saga_is_started_by_message_and_saga_does_not_exist()
     {
@@ -26,21 +25,21 @@ public class when_saga_is_started_by_message_and_saga_does_not_exist
     {
         _persistence
             .Received()
-            .Save(Arg.Is<ISaga>(x => x.OrchestrationIdentifier == OrchestrationIdentifier),
+            .Save(Arg.Is<ISaga>(x => x.OrchestrationIdentifier == _orchestrationIdentifier),
                 Arg.Any<CancellationToken>());
     }
 
     [Fact]
     public void saga_state_is_set()
     {
-        Assert.NotNull(Result);
-        Assert.NotNull(Result.State);
+        Assert.NotNull(_result);
+        Assert.NotNull(_result.State);
 
-        Assert.Contains(Result.State.Data, f =>
+        Assert.Contains(_result.State.Data, f =>
         {
             if (f is SampleNotification notification)
             {
-                return notification.OrchestrationIdentifier == OrchestrationIdentifier;
+                return notification.OrchestrationIdentifier == _orchestrationIdentifier;
             }
 
             return false;
@@ -49,20 +48,31 @@ public class when_saga_is_started_by_message_and_saga_does_not_exist
 
     public void Arrange()
     {
-        _persistence
-            .When(x => x.Save(Arg.Is<ISaga>(x => x.OrchestrationIdentifier == OrchestrationIdentifier),
-                Arg.Any<CancellationToken>())).Do(info => { Result = info.Arg<StartedSaga>(); });
+        _factory
+            .CreateSaga<StartedSaga>(Arg.Is(_orchestrationIdentifier), Arg.Any<object?>())
+            .Returns(_ =>
+            {
+                var saga = new StartedSaga();
 
-        Subject = new StartedSagaSampleNotificationHandler(_mediator, _factory, _persistence);
+                saga.ApplyState(_orchestrationIdentifier, null);
+
+                return saga;
+            });
+
+        _persistence
+            .When(x => x.Save(Arg.Is<ISaga>(x => x.OrchestrationIdentifier == _orchestrationIdentifier),
+                Arg.Any<CancellationToken>())).Do(info => { _result = info.Arg<StartedSaga>(); });
+
+        _subject = new StartedSagaSampleNotificationHandler(_mediator, _factory, _persistence);
     }
 
     public void Act()
     {
-        Subject.Handle(new SampleNotification()
+        _subject.Handle(new SampleNotification()
                 {
-                    Name = Name,
-                    DateRegistered = DateRegistered,
-                    MyUseableIdentifier = OrchestrationIdentifier
+                    Name = _name,
+                    DateRegistered = _dateRegistered,
+                    MyUseableIdentifier = _orchestrationIdentifier
                 },
                 CancellationToken.None)
             .GetAwaiter()

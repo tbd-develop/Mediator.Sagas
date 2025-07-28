@@ -5,8 +5,9 @@ public class when_saga_is_complete_and_publishes_notification
     private readonly ISagaPersistence _persistence = Substitute.For<ISagaPersistence>();
     private readonly IMediator _mediator = Substitute.For<IMediator>();
     private readonly ISagaFactory _factory = Substitute.For<ISagaFactory>();
-    private Guid OrchestrationIdentifier = Guid.Empty;
-    private PublishingSagaSampleNotificationHandler Subject;
+    private PublishingSagaSampleNotificationHandler _subject;
+
+    private readonly Guid _orchestrationIdentifier = Guid.Empty;
 
     public when_saga_is_complete_and_publishes_notification()
     {
@@ -20,7 +21,7 @@ public class when_saga_is_complete_and_publishes_notification
     {
         _mediator
             .Received()
-            .Publish(Arg.Is<CompleteNotification>(n => n.OrchestrationIdentifier == OrchestrationIdentifier));
+            .Publish(Arg.Is<CompleteNotification>(n => n.OrchestrationIdentifier == _orchestrationIdentifier));
     }
 
     [Fact]
@@ -28,17 +29,28 @@ public class when_saga_is_complete_and_publishes_notification
     {
         _persistence
             .Received()
-            .Delete(Arg.Is<PublishingSaga>(s => s.OrchestrationIdentifier == OrchestrationIdentifier));
+            .Delete(Arg.Is<PublishingSaga>(s => s.OrchestrationIdentifier == _orchestrationIdentifier));
     }
 
     private void Arrange()
     {
-        Subject = new PublishingSagaSampleNotificationHandler(_mediator, _factory, _persistence);
+        _factory
+            .CreateSaga<PublishingSaga>(Arg.Is(_orchestrationIdentifier), Arg.Any<object?>())
+            .Returns(_ =>
+            {
+                var saga = new PublishingSaga();
+
+                saga.ApplyState(_orchestrationIdentifier, null);
+
+                return saga;
+            });
+
+        _subject = new PublishingSagaSampleNotificationHandler(_mediator, _factory, _persistence);
     }
 
     private void Act()
     {
-        Subject.Handle(new SampleNotification(), CancellationToken.None)
+        _subject.Handle(new SampleNotification(), CancellationToken.None)
             .GetAwaiter()
             .GetResult();
     }

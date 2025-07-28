@@ -12,7 +12,7 @@ using TbdDevelop.Mediator.Sagas.SqlServer.Context;
 namespace TbdDevelop.Mediator.Sagas.SqlServer.Migrations
 {
     [DbContext(typeof(SagaDbContext))]
-    [Migration("20250720173619_Initial")]
+    [Migration("20250728123940_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -38,11 +38,8 @@ namespace TbdDevelop.Mediator.Sagas.SqlServer.Migrations
                     b.Property<DateTime?>("LastTriggered")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("MaximumTriggerCount")
-                        .HasColumnType("int");
-
-                    b.Property<TimeSpan?>("NextTriggerTime")
-                        .HasColumnType("time");
+                    b.Property<DateTime?>("NextTriggerTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("State")
                         .IsRequired()

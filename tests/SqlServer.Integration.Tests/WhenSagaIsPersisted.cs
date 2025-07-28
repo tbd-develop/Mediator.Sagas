@@ -49,14 +49,14 @@ public class WhenSagaIsPersisted(
         await using (fixture.RedirectOutput(outputHelper))
         {
             // Arrange
-
-            var saga = new SampleSaga();
-
-            // Act
-
             await using var scope = fixture.Provider.Value.CreateAsyncScope();
 
             var persistence = scope.ServiceProvider.GetRequiredService<ISagaPersistence>();
+            var factory = scope.ServiceProvider.GetRequiredService<ISagaFactory>();
+
+            var saga = factory.CreateSaga<SampleSaga>(_sagaOrchestrationId);
+
+            // Act
 
             await persistence.Save(saga, CancellationToken.None);
 
