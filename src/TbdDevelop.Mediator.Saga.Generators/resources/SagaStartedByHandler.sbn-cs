@@ -6,6 +6,7 @@ using System;
 using System.Threading.Tasks;
 using Mediator;
 using TbdDevelop.Mediator.Sagas.Contracts;
+using TbdDevelop.Mediator.Sagas.Infrastructure;
 {{ for using in usings }}
 using {{using}};
 {{ end }} 
@@ -16,35 +17,28 @@ namespace {{namespace}};
 /// Handler for {{notification}} to {{saga}}, will create a Saga if it does not exist
 /// </summary>
 
-public class {{classname}}(
-IMediator mediator, 
-ISagaFactory factory,
-ISagaPersistence _persistence) : INotificationHandler<{{notification}}>
+public partial class {{classname}}(
+    IMediator mediator, 
+    ISagaFactory factory,
+    ISagaPersistence persistence) : SagaNotificationHandlerBase<{{saga}}, {{notification}}>(mediator, persistence)
 {
-    public async ValueTask Handle({{notification}} notification, CancellationToken cancellationToken)
+    protected override async ValueTask<{{saga}}> HandleNotification({{notification}} notification, CancellationToken cancellationToken)
     {
-        if( notification is not IOrchestratedNotification orchestrated) {
-            return;
-        }
-
-        var saga = await _persistence.FetchSagaByOrchestrationIdentifier<{{saga}}>(orchestrated.OrchestrationIdentifier, cancellationToken);
-
-        if( saga is null) {
-            saga = factory.CreateSaga<{{saga}}>(orchestrated.OrchestrationIdentifier);
-        }
-
-        saga.Handle(notification);
-
-        if( saga.IsComplete) 
+        if (notification is IOrchestratedNotification orchestrated)
         {
-            if( saga is IPublishOnComplete publisher) 
+            var saga = await persistence.FetchSagaByOrchestrationIdentifier<{{saga}}>(
+                orchestrated.OrchestrationIdentifier, cancellationToken);
+
+            if (saga is null)
             {
-                mediator.Publish(publisher.Publish(), cancellationToken);
+                saga = factory.CreateSaga<{{saga}}>(orchestrated.OrchestrationIdentifier);
             }
-            
-            await _persistence.Delete(saga, cancellationToken); 
-        } else {
-            await _persistence.Save(saga, cancellationToken); 
+
+            saga.Handle(notification);
+
+            return saga;
         }
+
+        return null;   
     }
 }

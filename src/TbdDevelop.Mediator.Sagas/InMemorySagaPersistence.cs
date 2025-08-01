@@ -4,8 +4,10 @@ using TbdDevelop.Mediator.Sagas.Contracts;
 namespace TbdDevelop.Mediator.Sagas;
 
 /// <summary>
-/// In Memory implementation for Saga Persistence. Useful in testing or in scenarios where it
-/// doesn't matter if sagas survive an application restart.
+/// In Memory implementation for Saga Persistence. Useful in testing or
+/// in scenarios where it doesn't matter if sagas survive an application restart.
+///
+/// NOT suitable for distributed components
 /// </summary>
 public class InMemorySagaPersistence : ISagaPersistence
 {
@@ -25,7 +27,8 @@ public class InMemorySagaPersistence : ISagaPersistence
         return Task.FromResult<TSaga?>(null);
     }
 
-    public Task Save<T>(T saga, CancellationToken cancellationToken = default) where T : class, ISaga
+    public Task<bool> UpdateIfVersionMatches<T>(T saga, CancellationToken cancellationToken = default)
+        where T : class, ISaga
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -33,7 +36,7 @@ public class InMemorySagaPersistence : ISagaPersistence
 
         _sagas.AddOrUpdate(saga.OrchestrationIdentifier, saga, (_, _) => saga);
 
-        return Task.CompletedTask;
+        return Task.FromResult(true);
     }
 
     public Task Delete<T>(T saga, CancellationToken cancellationToken = default) where T : class, ISaga

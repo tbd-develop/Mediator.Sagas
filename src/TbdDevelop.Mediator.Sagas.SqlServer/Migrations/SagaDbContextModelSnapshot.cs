@@ -49,6 +49,9 @@ namespace TbdDevelop.Mediator.Sagas.SqlServer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Version")
+                        .HasColumnType("int");
+
                     b.HasKey("OrchestrationIdentifier")
                         .HasName("PK_saga_orchestration_id");
 

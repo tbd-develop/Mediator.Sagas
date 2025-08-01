@@ -1,7 +1,4 @@
-﻿using TbdDevelop.Mediator.Saga.Generators.Tests.Sample.Notifications;
-using TbdDevelop.Mediator.Saga.Generators.Tests.Sample.State;
-using TbdDevelop.Mediator.Sagas;
-using TbdDevelop.Mediator.Sagas.Contracts;
+﻿using TbdDevelop.Mediator.Sagas;
 
 namespace TbdDevelop.Mediator.Saga.Generators.Tests.Sample.Saga;
 

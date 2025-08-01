@@ -8,6 +8,7 @@ public interface ISaga
     TimeSpan? TriggerInterval { get; set; }
     DateTime? LastTriggered { get; set; }
     object State { get; }
+    int Version { get; }
     Task Trigger(CancellationToken cancellationToken);
 
     void ApplyState(Guid orchestrationIdentifier, object state);

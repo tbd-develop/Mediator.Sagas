@@ -6,6 +6,7 @@ using System;
 using System.Threading.Tasks;
 using Mediator;
 using TbdDevelop.Mediator.Sagas.Contracts;
+using TbdDevelop.Mediator.Sagas.Infrastructure;
 {{ for using in usings }}
 using {{using}};
 {{ end }} 
@@ -16,32 +17,26 @@ namespace {{namespace}};
 /// Handler for {{notification}} to {{saga}}
 /// </summary>
 
-public partial class {{classname}}(IMediator mediator, ISagaPersistence _persistence) : INotificationHandler<{{notification}}>
+public partial class {{classname}}(
+    IMediator mediator, 
+    ISagaPersistence persistence) : SagaNotificationHandlerBase<{{saga}}, {{notification}}>(mediator, persistence)
 {
-    public async ValueTask Handle({{notification}} notification, CancellationToken cancellationToken)
+    protected override async ValueTask<{{saga}}> HandleNotification({{notification}} notification, CancellationToken cancellationToken)
     {
-        if( notification is not IOrchestratedNotification orchestrated) {
-            return;
-        }
-
-        var saga = await _persistence.FetchSagaByOrchestrationIdentifier<{{saga}}>(orchestrated.OrchestrationIdentifier, cancellationToken);
-
-        if( saga is null) {
-            return;
-        }
-
-        saga.Handle(notification);
-        
-        if( saga.IsComplete) 
-        {
-            if( saga is IPublishOnComplete publisher) 
+        if (notification is IOrchestratedNotification orchestrated)
+        {         
+            var saga = await persistence.FetchSagaByOrchestrationIdentifier<{{saga}}>(orchestrated.OrchestrationIdentifier, cancellationToken);
+            
+            if( saga is null) 
             {
-                mediator.Publish(publisher.Publish(), cancellationToken);
+                return null;
             }
             
-            await _persistence.Delete(saga, cancellationToken); 
-        } else {
-            await _persistence.Save(saga, cancellationToken); 
+            saga.Handle(notification);
+            
+            return saga;
         }
+        
+        return null;
     }
 }

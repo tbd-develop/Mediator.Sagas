@@ -28,7 +28,7 @@ public class WhenSagaIsTriggered(
             {
                 var saga = factory.CreateSaga<SampleTriggerSaga>(_sagaOrchestrationId);
 
-                await persistence.Save(saga, saga.State.CancellationTokenSource.Token);
+                await persistence.UpdateIfVersionMatches(saga, saga.State.CancellationTokenSource.Token);
 
                 await Task.Delay(TimeSpan.FromSeconds(30), saga.State.CancellationTokenSource.Token);
             }
