@@ -12,7 +12,7 @@ using TbdDevelop.Mediator.Sagas.SqlServer.Context;
 namespace TbdDevelop.Mediator.Sagas.SqlServer.Migrations
 {
     [DbContext(typeof(SagaDbContext))]
-    [Migration("20250728123940_Initial")]
+    [Migration("20250731110303_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -51,6 +51,9 @@ namespace TbdDevelop.Mediator.Sagas.SqlServer.Migrations
                     b.Property<string>("TypeIdentifier")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Version")
+                        .HasColumnType("int");
 
                     b.HasKey("OrchestrationIdentifier")
                         .HasName("PK_saga_orchestration_id");

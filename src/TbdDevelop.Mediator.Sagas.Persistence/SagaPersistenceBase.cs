@@ -39,7 +39,7 @@ public abstract class SagaPersistenceBase<TContext>(
     /// <param name="saga"></param>
     /// <param name="cancellationToken"></param>
     /// <typeparam name="TSaga"></typeparam>
-    public async Task Save<TSaga>(TSaga saga, CancellationToken cancellationToken = default)
+    public async Task<bool> UpdateIfVersionMatches<TSaga>(TSaga saga, CancellationToken cancellationToken = default)
         where TSaga : class, ISaga
     {
         await using var context = await contextFactory.CreateDbContextAsync(cancellationToken);
@@ -59,16 +59,25 @@ public abstract class SagaPersistenceBase<TContext>(
                 State = saga.State.AsJson(),
                 NextTriggerTime = saga.NextTriggerTime,
                 TriggerInterval = saga.TriggerInterval,
+                Version = 1,
                 LastTriggered = null
             });
         }
         else
         {
+            if (sagaFromDb.Version != saga.Version)
+            {
+                return false;
+            }
+
+            sagaFromDb.Version += 1;
             sagaFromDb.IsComplete = saga.IsComplete;
             sagaFromDb.State = JsonSerializer.Serialize(saga.State);
         }
 
         await context.SaveChangesAsync(cancellationToken);
+
+        return true;
     }
 
     /// <summary>

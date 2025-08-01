@@ -1,71 +1,64 @@
-using NSubstitute;
-
+using TbdDevelop.Mediator.Saga.Generators.Tests.Infrastructure;
 
 namespace TbdDevelop.Mediator.Saga.Generators.Tests;
 
-public class when_single_handler_is_implemented_on_saga_and_saga_exists
+public class when_single_handler_is_implemented_on_saga_and_saga_exists : ArrangeActBase
 {
-    public SampleSagaSampleNotificationHandler Subject;
-    public ISagaPersistence SagaPersistence;
-    public SampleSaga Result;
-    public IMediator Mediator;
+    private SampleSagaSampleNotificationHandler _subject = null!;
+    private readonly ISagaPersistence _sagaPersistence = Substitute.For<ISagaPersistence>();
+    private readonly IMediator _mediator = Substitute.For<IMediator>();
 
-    public Guid OrchestratingIdentifier = new();
-    public string Name = "Name";
-    public DateTime DateRegistered = DateTime.UtcNow;
-
-    public when_single_handler_is_implemented_on_saga_and_saga_exists()
-    {
-        Arrange();
-
-        Act();
-    }
+    private SampleSaga _result = null!;
+    private readonly Guid _orchestratingIdentifier = new();
+    private readonly string _name = "Name";
+    private readonly DateTime _dateRegistered = DateTime.UtcNow;
 
     [Fact]
     public void handle_is_called_on_saga_instance()
     {
-        Assert.True(Result.HandlerWasCalled);
+        Assert.True(_result.HandlerWasCalled);
     }
 
     [Fact]
     public void notification_data_is_passed_to_saga()
     {
-        Assert.Equal(Name, Result.NotificationWas.Name);
-        Assert.Equal(DateRegistered, Result.NotificationWas.DateRegistered);
+        Assert.Equal(_name, _result.NotificationWas.Name);
+        Assert.Equal(_dateRegistered, _result.NotificationWas.DateRegistered);
     }
 
     [Fact]
     public void saga_is_persisted()
     {
-        SagaPersistence
+        _sagaPersistence
             .Received()
-            .Save(Arg.Is<SampleSaga>(x => x.OrchestrationIdentifier == OrchestratingIdentifier));
+            .UpdateIfVersionMatches(Arg.Is<SampleSaga>(x => x.OrchestrationIdentifier == _orchestratingIdentifier),
+                Arg.Any<CancellationToken>());
     }
 
-    private void Arrange()
+    protected override ValueTask ArrangeAsync()
     {
-        Result = new SampleSaga();
+        _result = new SampleSaga();
 
-        SagaPersistence = Substitute.For<ISagaPersistence>();
-        Mediator = Substitute.For<IMediator>();
+        _sagaPersistence
+            .FetchSagaByOrchestrationIdentifier<SampleSaga>(Arg.Is(_orchestratingIdentifier))
+            .Returns(_result);
 
-        SagaPersistence
-            .FetchSagaByOrchestrationIdentifier<SampleSaga>(Arg.Is(OrchestratingIdentifier))
-            .Returns(Result);
+        _sagaPersistence.UpdateIfVersionMatches(Arg.Any<SampleSaga>(), Arg.Any<CancellationToken>())
+            .Returns(true);
 
-        Subject = new SampleSagaSampleNotificationHandler(Mediator, SagaPersistence);
+        _subject = new SampleSagaSampleNotificationHandler(_mediator, _sagaPersistence);
+
+        return base.ArrangeAsync();
     }
 
-    private void Act()
+    protected override async ValueTask ActAsync()
     {
-        Subject.Handle(new SampleNotification()
-                {
-                    MyUseableIdentifier = OrchestratingIdentifier,
-                    Name = Name,
-                    DateRegistered = DateRegistered
-                },
-                CancellationToken.None)
-            .GetAwaiter()
-            .GetResult();
+        await _subject.Handle(new SampleNotification()
+            {
+                MyUseableIdentifier = _orchestratingIdentifier,
+                Name = _name,
+                DateRegistered = _dateRegistered
+            },
+            CancellationToken.None);
     }
 }

@@ -31,7 +31,7 @@ public class WhenSagaIsPersisted(
 
             saga.Handle(new SampleNotification(_sagaOrchestrationId) { Id = _sampleId });
 
-            await persistence.Save(saga, CancellationToken.None);
+            await persistence.UpdateIfVersionMatches(saga, CancellationToken.None);
 
             // Assert
 
@@ -58,7 +58,7 @@ public class WhenSagaIsPersisted(
 
             // Act
 
-            await persistence.Save(saga, CancellationToken.None);
+            await persistence.UpdateIfVersionMatches(saga, CancellationToken.None);
 
             // Assert
 

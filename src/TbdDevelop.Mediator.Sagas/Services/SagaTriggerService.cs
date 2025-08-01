@@ -43,7 +43,7 @@ public class SagaTriggerService(
                 {
                     await saga.Trigger(stoppingToken);
 
-                    await persistence.Save(saga, stoppingToken);
+                    await persistence.UpdateIfVersionMatches(saga, stoppingToken);
                 }
 
                 stopWatch.Stop();

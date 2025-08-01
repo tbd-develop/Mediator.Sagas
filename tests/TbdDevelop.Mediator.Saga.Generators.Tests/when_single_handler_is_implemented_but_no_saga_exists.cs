@@ -22,7 +22,7 @@ public class when_single_handler_is_implemented_but_no_saga_exists
     {
         SagaPersistence
             .DidNotReceive()
-            .Save(Arg.Any<SampleSaga>());
+            .UpdateIfVersionMatches(Arg.Any<SampleSaga>());
     }
 
     private void Arrange()

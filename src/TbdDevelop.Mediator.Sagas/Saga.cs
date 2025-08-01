@@ -16,6 +16,8 @@ public abstract class Saga<TState> : ISaga<TState>
 
     private Guid _orchestrationIdentifier;
     public Guid OrchestrationIdentifier => _orchestrationIdentifier;
+
+    public int Version { get; set; }
     object ISaga.State => State;
 
     private TState? _state;
