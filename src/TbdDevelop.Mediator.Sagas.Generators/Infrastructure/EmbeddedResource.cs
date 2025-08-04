@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace TbdDevelop.Mediator.Saga.Generators.Infrastructure;
+namespace TbdDevelop.Mediator.Sagas.Generators.Infrastructure;
 
 public static class EmbeddedResource
 {

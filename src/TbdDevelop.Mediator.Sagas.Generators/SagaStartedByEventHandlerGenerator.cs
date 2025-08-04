@@ -1,14 +1,13 @@
-﻿using System.Diagnostics;
-using Microsoft.CodeAnalysis;
-using TbdDevelop.Mediator.Saga.Generators.Infrastructure;
+﻿using Microsoft.CodeAnalysis;
+using TbdDevelop.Mediator.Sagas.Generators.Infrastructure;
 
-namespace TbdDevelop.Mediator.Saga.Generators;
+namespace TbdDevelop.Mediator.Sagas.Generators;
 
 [Generator]
 public class SagaStartedByEventHandlerGenerator : SagaHandlerEventGenerator, IIncrementalGenerator
 {
-    public override string TemplateName => "resources/SagaStartedByHandler.sbn-cs";
-    public override string HandlerInterfaceName => "IAmStartedBy";
+    protected override string TemplateName => "resources/SagaStartedByHandler.sbn-cs";
+    protected override string HandlerInterfaceName => "IAmStartedBy";
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {

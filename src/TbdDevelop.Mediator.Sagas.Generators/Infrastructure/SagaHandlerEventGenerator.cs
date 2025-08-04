@@ -5,12 +5,12 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using Scriban;
 
-namespace TbdDevelop.Mediator.Saga.Generators.Infrastructure;
+namespace TbdDevelop.Mediator.Sagas.Generators.Infrastructure;
 
 public abstract class SagaHandlerEventGenerator
 {
-    public abstract string TemplateName { get; }
-    public abstract string HandlerInterfaceName { get; }
+    protected abstract string TemplateName { get; }
+    protected abstract string HandlerInterfaceName { get; }
 
     protected void Generate(IncrementalGeneratorInitializationContext context)
     {
@@ -73,7 +73,7 @@ public abstract class SagaHandlerEventGenerator
             .ToList();
 
         return handlerIdentifiers.Any()
-            ? new EntityInfo(declaration, handlerIdentifiers)
+            ? new EntityInfo(declaration, handlerIdentifiers!)
             : null;
     }
 
