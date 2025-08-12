@@ -7,9 +7,11 @@ public class SampleSaga
     : Saga<SimpleState>,
         IHandle<SampleNotification>
 {
-    public void Handle(SampleNotification @event)
+    public ValueTask Handle(SampleNotification @event)
     {
         State.Value = $"{@event.Id}";
+
+        return ValueTask.CompletedTask;
     }
 }
 

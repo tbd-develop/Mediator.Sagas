@@ -32,7 +32,7 @@ public partial class {{classname}}(
                 return null;
             }
             
-            saga.Handle(notification);
+            await saga.Handle(notification);
             
             return saga;
         }

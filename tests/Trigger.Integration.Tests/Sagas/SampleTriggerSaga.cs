@@ -11,8 +11,9 @@ public class SampleTriggerSaga : Saga<SampleState>,
     public override TimeSpan? TriggerInterval { get; set; } = TimeSpan.FromSeconds(5);
     public override DateTime? NextTriggerTime { get; set; } = DateTime.UtcNow.AddSeconds(5);
 
-    public void Handle(SampleNotification @event)
+    public ValueTask Handle(SampleNotification @event)
     {
+        return ValueTask.CompletedTask;
     }
 
     public override Task TriggerImpl(CancellationToken cancellationToken)

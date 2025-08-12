@@ -34,7 +34,7 @@ public partial class {{classname}}(
                 saga = factory.CreateSaga<{{saga}}>(orchestrated.OrchestrationIdentifier);
             }
 
-            saga.Handle(notification);
+            await saga.Handle(notification);
 
             return saga;
         }

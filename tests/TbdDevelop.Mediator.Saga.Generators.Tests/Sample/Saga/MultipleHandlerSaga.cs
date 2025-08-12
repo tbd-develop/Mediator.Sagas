@@ -7,12 +7,12 @@ public class MultipleHandlerSaga
         IHandle<SampleNotification>,
         IHandle<FurtherNotification>
 {
-    public void Handle(SampleNotification @event)
+    public ValueTask Handle(SampleNotification @event)
     {
         throw new NotImplementedException();
     }
 
-    public void Handle(FurtherNotification @event)
+    public ValueTask Handle(FurtherNotification @event)
     {
         throw new NotImplementedException();
     }

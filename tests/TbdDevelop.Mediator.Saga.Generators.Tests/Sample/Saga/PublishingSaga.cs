@@ -10,9 +10,11 @@ public class PublishingSaga : Saga<SampleSagaState>,
 
     public override bool IsComplete => MessageWasHandled;
 
-    public void Handle(SampleNotification @event)
+    public ValueTask Handle(SampleNotification @event)
     {
         MessageWasHandled = true;
+
+        return ValueTask.CompletedTask;
     }
 
     public CompleteNotification Publish()

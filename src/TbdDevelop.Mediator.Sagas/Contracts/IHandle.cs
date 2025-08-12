@@ -3,5 +3,5 @@
 public interface IHandle<in TNotification>
     where TNotification : class, IOrchestratedNotification
 {
-    void Handle(TNotification @event);
+    ValueTask Handle(TNotification @event);
 }

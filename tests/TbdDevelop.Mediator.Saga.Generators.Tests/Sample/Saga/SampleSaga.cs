@@ -10,9 +10,11 @@ public class SampleSaga : Saga<SampleSagaState>,
 
     public override bool IsComplete { get; } = false;
 
-    public void Handle(SampleNotification @event)
+    public ValueTask Handle(SampleNotification @event)
     {
         HandlerWasCalled = true;
         NotificationWas = @event;
+
+        return ValueTask.CompletedTask;
     }
 }

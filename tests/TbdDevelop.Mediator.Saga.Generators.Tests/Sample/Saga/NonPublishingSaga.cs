@@ -10,8 +10,10 @@ public class NonPublishingSaga
 
     public override bool IsComplete => HandlerWasCalled;
 
-    public void Handle(SampleNotification @event)
+    public ValueTask Handle(SampleNotification @event)
     {
         HandlerWasCalled = true;
+
+        return ValueTask.CompletedTask;
     }
 }

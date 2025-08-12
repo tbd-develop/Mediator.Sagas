@@ -4,15 +4,17 @@ namespace TbdDevelop.Mediator.Saga.Generators.Tests.Sample.Saga;
 
 public class StartedSaga
     : Saga<SampleSagaState>,
-    IAmStartedBy<SampleNotification>
+        IAmStartedBy<SampleNotification>
 {
     public bool HandlerWasCalled { get; private set; }
     public SampleNotification NotificationWas { get; private set; } = null!;
 
-    public void Handle(SampleNotification @event)
+    public ValueTask Handle(SampleNotification @event)
     {
         HandlerWasCalled = true;
         NotificationWas = @event;
         State.Data = [@event];
+
+        return ValueTask.CompletedTask;
     }
 }
