@@ -9,7 +9,7 @@ public class StartedSaga
     public bool HandlerWasCalled { get; private set; }
     public SampleNotification NotificationWas { get; private set; } = null!;
 
-    public ValueTask Handle(SampleNotification @event)
+    public ValueTask Handle(SampleNotification @event, CancellationToken cancellationToken)
     {
         HandlerWasCalled = true;
         NotificationWas = @event;

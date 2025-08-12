@@ -10,7 +10,7 @@ public class NonPublishingSaga
 
     public override bool IsComplete => HandlerWasCalled;
 
-    public ValueTask Handle(SampleNotification @event)
+    public ValueTask Handle(SampleNotification @event, CancellationToken cancellationToken)
     {
         HandlerWasCalled = true;
 

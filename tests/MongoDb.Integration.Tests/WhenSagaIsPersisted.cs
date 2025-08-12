@@ -29,7 +29,7 @@ public class WhenSagaIsPersisted(
 
             var persistence = scope.ServiceProvider.GetRequiredService<ISagaPersistence>();
 
-            saga.Handle(new SampleNotification(orchestrationId) { Id = sampleId });
+            saga.Handle(new SampleNotification(orchestrationId) { Id = sampleId }, CancellationToken.None);
 
             await persistence.UpdateIfVersionMatches(saga, CancellationToken.None);
 

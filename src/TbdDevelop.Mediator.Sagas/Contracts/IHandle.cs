@@ -3,5 +3,5 @@
 public interface IHandle<in TNotification>
     where TNotification : class, IOrchestratedNotification
 {
-    ValueTask Handle(TNotification @event);
+    ValueTask Handle(TNotification @event, CancellationToken cancellationToken);
 }

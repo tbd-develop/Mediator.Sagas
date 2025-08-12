@@ -10,7 +10,7 @@ public class PublishingSaga : Saga<SampleSagaState>,
 
     public override bool IsComplete => MessageWasHandled;
 
-    public ValueTask Handle(SampleNotification @event)
+    public ValueTask Handle(SampleNotification @event, CancellationToken cancellationToken)
     {
         MessageWasHandled = true;
 

@@ -24,12 +24,12 @@ public class WhenSagaIsPersisted(
             var factory = scope.ServiceProvider.GetRequiredService<ISagaFactory>();
 
             var saga = factory.CreateSaga<SampleSaga>(_sagaOrchestrationId);
-            
+
             // Act
 
             var persistence = scope.ServiceProvider.GetRequiredService<ISagaPersistence>();
 
-            saga.Handle(new SampleNotification(_sagaOrchestrationId) { Id = _sampleId });
+            await saga.Handle(new SampleNotification(_sagaOrchestrationId) { Id = _sampleId }, CancellationToken.None);
 
             await persistence.UpdateIfVersionMatches(saga, CancellationToken.None);
 
