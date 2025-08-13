@@ -21,6 +21,8 @@ jobs:
         run: dotnet test -c Release --no-build
       - name: Pack Sagas
         run: dotnet pack ./src/TbdDevelop.Mediator.Sagas/ -c Release -p:PackageVersion=${{ github.event.release.tag_name }} --no-build --output .
+      - name: Pack Persistence
+        run: dotnet pack ./src/TbdDevelop.Mediator.Sagas.Persistence / -c Release -p:PackageVersion=${{ github.event.release.tag_name }} --no-build --output .
       - name: Pack Generators
         run: dotnet pack ./src/TbdDevelop.Mediator.Sagas.Generators/ -c Release -p:PackageVersion=${{ github.event.release.tag_name }} --no-build --output .
       - name: Pack SqlServer Persistence
