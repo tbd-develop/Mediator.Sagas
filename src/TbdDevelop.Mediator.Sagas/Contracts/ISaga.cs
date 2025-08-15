@@ -11,7 +11,7 @@ public interface ISaga
     int Version { get; }
     Task Trigger(CancellationToken cancellationToken);
 
-    void ApplyState(Guid orchestrationIdentifier, object state);
+    void ApplyState(Guid orchestrationIdentifier, int version, object state);
 }
 
 public interface ISaga<TState> : ISaga
@@ -19,5 +19,5 @@ public interface ISaga<TState> : ISaga
 {
     new TState State { get; }
 
-    void ApplyState(Guid orchestrationIdentifier, TState state);
+    void ApplyState(Guid orchestrationIdentifier, int version, TState state);
 }

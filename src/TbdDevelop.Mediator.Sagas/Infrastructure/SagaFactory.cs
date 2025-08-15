@@ -11,7 +11,7 @@ public class SagaFactory(IServiceProvider serviceProvider) : ISagaFactory
     {
         var saga = Provider.GetRequiredService<TSaga>();
 
-        saga.ApplyState(orchestrationIdentifier, state ?? saga.State);
+        saga.ApplyState(orchestrationIdentifier, 1, state ?? saga.State);
 
         return saga;
     }

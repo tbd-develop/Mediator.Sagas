@@ -1,9 +1,9 @@
-﻿using TbdDevelop.Mediator.Sagas;
+﻿using MongoDb.Integration.Tests.Sagas.Commands;
+using MongoDb.Integration.Tests.Sagas.State;
+using TbdDevelop.Mediator.Sagas;
 using TbdDevelop.Mediator.Sagas.Contracts;
-using Trigger.Integration.Tests.Sagas.Commands;
-using Trigger.Integration.Tests.Sagas.State;
 
-namespace Trigger.Integration.Tests.Sagas;
+namespace MongoDb.Integration.Tests.Sagas;
 
 public class SampleTriggerSaga : Saga<SampleState>,
     IAmStartedBy<SampleNotification>
@@ -19,8 +19,6 @@ public class SampleTriggerSaga : Saga<SampleState>,
     protected override Task TriggerImpl(CancellationToken cancellationToken)
     {
         State.HasBeenTriggered = true;
-
-        State.CancellationTokenSource.Cancel();
 
         return base.TriggerImpl(cancellationToken);
     }

@@ -40,7 +40,7 @@ public class when_saga_is_complete_and_publishes_notification
             {
                 var saga = new PublishingSaga();
 
-                saga.ApplyState(_orchestrationIdentifier, null);
+                saga.ApplyState(_orchestrationIdentifier, 1, null);
 
                 return saga;
             });

@@ -17,22 +17,24 @@ public abstract class Saga<TState> : ISaga<TState>
     private Guid _orchestrationIdentifier;
     public Guid OrchestrationIdentifier => _orchestrationIdentifier;
 
-    public int Version { get; set; }
+    private int _version;
+    public int Version => _version;
     object ISaga.State => State;
 
     private TState? _state;
     public TState State => _state ??= new TState();
 
-    void ISaga.ApplyState(Guid orchestrationIdentifier, object state) =>
-        ApplyState(orchestrationIdentifier, (TState)state);
+    void ISaga.ApplyState(Guid orchestrationIdentifier, int version, object state) =>
+        ApplyState(orchestrationIdentifier, version, (TState)state);
 
-    public void ApplyState(Guid orchestrationIdentifier, TState state)
+    public void ApplyState(Guid orchestrationIdentifier, int version, TState state)
     {
         _orchestrationIdentifier = orchestrationIdentifier;
         _state = state;
+        _version = version;
     }
 
-    public virtual Task TriggerImpl(CancellationToken cancellationToken)
+    protected virtual Task TriggerImpl(CancellationToken cancellationToken)
     {
         return Task.CompletedTask;
     }

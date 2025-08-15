@@ -49,7 +49,7 @@ public class when_saga_is_started_by_message_and_saga_does_not_exist : ArrangeAc
             {
                 var saga = new StartedSaga();
 
-                saga.ApplyState(_orchestrationIdentifier, null);
+                saga.ApplyState(_orchestrationIdentifier, 1, null);
 
                 return saga;
             });

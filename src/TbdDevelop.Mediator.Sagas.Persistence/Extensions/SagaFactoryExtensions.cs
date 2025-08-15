@@ -18,7 +18,7 @@ public static class SagaFactoryExtensions
         saga.TriggerInterval = model.TriggerInterval;
         saga.LastTriggered = model.LastTriggered;
 
-        saga.ApplyState(model.OrchestrationIdentifier, model.State.FromJson(saga.State.GetType()));
+        saga.ApplyState(model.OrchestrationIdentifier, model.Version, model.State.FromJson(saga.State.GetType()));
 
         return saga;
     }
@@ -32,7 +32,7 @@ public static class SagaFactoryExtensions
         saga.TriggerInterval = model.TriggerInterval;
         saga.LastTriggered = model.LastTriggered;
 
-        saga.ApplyState(model.OrchestrationIdentifier, model.State.FromJson(saga.State.GetType()));
+        saga.ApplyState(model.OrchestrationIdentifier, model.Version, model.State.FromJson(saga.State.GetType()));
 
         return saga;
     }

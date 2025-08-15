@@ -125,6 +125,6 @@ public abstract class SagaPersistenceBase<TContext>(
             where saga is not null && !saga.IsComplete
             select saga;
 
-        return result.AsEnumerable();
+        return result.ToList();
     }
 }
