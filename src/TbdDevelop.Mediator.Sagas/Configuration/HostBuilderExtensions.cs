@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using TbdDevelop.Mediator.Sagas.Contracts;
+using TbdDevelop.Mediator.Sagas.Infrastructure;
 using TbdDevelop.Mediator.Sagas.Services;
 
 namespace TbdDevelop.Mediator.Sagas.Configuration;
@@ -20,6 +22,8 @@ public static class HostBuilderExtensions
         var configuration = new SagaConfiguration(builder.Services);
 
         configure(configuration);
+
+        builder.Services.AddTransient<ISagaFactory, SagaFactory>();
 
         builder.Services.Configure<TriggerOptions>(builder.Configuration.GetSection("sagas:triggers"));
         builder.Services.AddHostedService<SagaTriggerService>();

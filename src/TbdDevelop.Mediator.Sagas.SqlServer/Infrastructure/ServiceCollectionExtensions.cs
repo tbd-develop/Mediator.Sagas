@@ -21,7 +21,7 @@ public static class ServiceCollectionExtensions
 
             collection.RemoveAll<ISagaPersistence>();
 
-            collection.AddSingleton<ISagaPersistence, SqlServerSagaPersistence>();
+            collection.AddTransient<ISagaPersistence, SqlServerSagaPersistence>();
 
             collection.AddHostedService<SqlServerMigrationService>();
         });

@@ -28,7 +28,7 @@ public static class ServiceCollectionExtensions
 
             collection.RemoveAll<ISagaPersistence>();
 
-            collection.AddSingleton<ISagaPersistence, MongoDbSagaPersistence>();
+            collection.AddTransient<ISagaPersistence, MongoDbSagaPersistence>();
         });
 
         return configuration;
