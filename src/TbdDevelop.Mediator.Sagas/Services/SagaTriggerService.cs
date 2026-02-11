@@ -28,22 +28,23 @@ public class SagaTriggerService(
 
         return Task.Run(async () =>
         {
-            using var scope = scopeFactory.CreateScope();
-            
             while (!stoppingToken.IsCancellationRequested)
             {
                 var stopWatch = Stopwatch.StartNew();
-                
-                var persistence = scope.ServiceProvider.GetRequiredService<ISagaPersistence>();
-                
-                var sagas = await persistence.AllSagasToTrigger(
-                    options.CurrentValue?.IntervalMs ?? DefaultIntervalMs, stoppingToken);
 
-                foreach (var saga in sagas.ToList())
+                using (var scope = scopeFactory.CreateScope())
                 {
-                    await saga.Trigger(stoppingToken);
+                    var persistence = scope.ServiceProvider.GetRequiredService<ISagaPersistence>();
 
-                    await persistence.UpdateIfVersionMatches(saga, stoppingToken);
+                    var sagas = await persistence.AllSagasToTrigger(
+                        options.CurrentValue?.IntervalMs ?? DefaultIntervalMs, stoppingToken);
+
+                    foreach (var saga in sagas.ToList())
+                    {
+                        await saga.Trigger(stoppingToken);
+
+                        await persistence.UpdateIfVersionMatches(saga, stoppingToken);
+                    }
                 }
 
                 stopWatch.Stop();
