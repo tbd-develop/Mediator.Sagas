@@ -106,8 +106,11 @@ public abstract class SagaHandlerEventGenerator
                 var handlerNamespace = model.GetDeclaredSymbol(sagaClassDeclaration)
                     ?.ContainingNamespace.ToString() ?? string.Empty;
 
-                var notificationSymbol = model.GetSymbolInfo(handlerIdentifierNameSyntax).Symbol;
-                var notificationNamespace = notificationSymbol?.ContainingNamespace?.ToString() ?? string.Empty;
+                var notificationSymbol = model
+                    .GetSymbolInfo(handlerIdentifierNameSyntax)
+                    .Symbol;
+                var notificationNamespace = notificationSymbol?.ContainingNamespace?.ToString() ??
+                                            string.Empty;
 
                 var sourceText = template.Render(new
                 {

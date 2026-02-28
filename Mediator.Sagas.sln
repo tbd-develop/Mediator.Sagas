@@ -29,6 +29,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trigger.Integration.Tests",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TbdDevelop.Mediator.Sagas.Generators", "src\TbdDevelop.Mediator.Sagas.Generators\TbdDevelop.Mediator.Sagas.Generators.csproj", "{04E99ABF-EE1C-4BC9-B412-73A39207F0D6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TbdDevelop.Mediator.Sagas.Postgres", "src\TbdDevelop.Mediator.Sagas.Postgres\TbdDevelop.Mediator.Sagas.Postgres.csproj", "{2816B0D8-5232-4EDA-8604-D8798AF4EBD2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Postgres.Integration.Tests", "tests\Postgres.Integration.Tests\Postgres.Integration.Tests.csproj", "{7500D978-FAD4-4BA1-9006-70A1E1C96861}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +79,14 @@ Global
 		{04E99ABF-EE1C-4BC9-B412-73A39207F0D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04E99ABF-EE1C-4BC9-B412-73A39207F0D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04E99ABF-EE1C-4BC9-B412-73A39207F0D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2816B0D8-5232-4EDA-8604-D8798AF4EBD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2816B0D8-5232-4EDA-8604-D8798AF4EBD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2816B0D8-5232-4EDA-8604-D8798AF4EBD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2816B0D8-5232-4EDA-8604-D8798AF4EBD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7500D978-FAD4-4BA1-9006-70A1E1C96861}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7500D978-FAD4-4BA1-9006-70A1E1C96861}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7500D978-FAD4-4BA1-9006-70A1E1C96861}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7500D978-FAD4-4BA1-9006-70A1E1C96861}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{FBD7C32C-46AB-4049-9023-FF5FC92DB3A4} = {1E7C0BE5-45AB-4872-8E55-2E1C974BDC4F}
@@ -83,5 +95,6 @@ Global
 		{F37962D8-7AF4-446E-B931-4E3DC8BA51A6} = {1E7C0BE5-45AB-4872-8E55-2E1C974BDC4F}
 		{D85253E2-E4F7-4683-8303-ECB25649D00C} = {F37962D8-7AF4-446E-B931-4E3DC8BA51A6}
 		{31CFE71E-16A4-4347-8001-18A156BDB2DA} = {F37962D8-7AF4-446E-B931-4E3DC8BA51A6}
+		{7500D978-FAD4-4BA1-9006-70A1E1C96861} = {F37962D8-7AF4-446E-B931-4E3DC8BA51A6}
 	EndGlobalSection
 EndGlobal
